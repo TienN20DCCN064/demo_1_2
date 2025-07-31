@@ -1,8 +1,8 @@
 import React from 'react';
-import {Button} from 'reactstrap';
+import { Button } from 'reactstrap';
 
-const UserListItem = ({user, onDeleteClick}) => {
-
+// const UserListItem = ({user, onDeleteClick}) => {
+const UserListItem = ({ user }) => {
     const stringToHslColor = (str = '') => {
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
@@ -14,7 +14,7 @@ const UserListItem = ({user, onDeleteClick}) => {
     };
 
     return (
-        <div style={{display: 'flex'}}>
+        <div style={{ display: 'flex' }}>
             <div style={{
                 margin: 'auto 0',
                 textAlign: 'center',
@@ -24,16 +24,17 @@ const UserListItem = ({user, onDeleteClick}) => {
                 borderRadius: '50%',
                 color: 'white',
                 fontWeight: 'bold',
-                background: stringToHslColor(user.firstName + user.lastName)}}>
+                background: stringToHslColor(user.firstName + user.lastName)
+            }}>
                 {!!user && !!user.firstName && !!user.lastName ? user.firstName[0].toUpperCase() + user.lastName[0].toUpperCase() : ''}
             </div>
-            <div style={{margin: 'auto 0', flexGrow: 1, paddingLeft: '10px'}}>
+            <div style={{ margin: 'auto 0', flexGrow: 1, paddingLeft: '10px' }}>
                 {user.firstName} {user.lastName}
             </div>
-            <div style={{margin: 'auto 0'}}>
-                <Button size="sm" color="danger" outline onClick={() => onDeleteClick(user.id)}>
+            <div style={{ margin: 'auto 0' }}>
+                {/* <Button size="sm" color="danger" outline onClick={() => onDeleteClick(user.id)}>
                     Delete
-                </Button>
+                </Button> */}
             </div>
         </div>
     );

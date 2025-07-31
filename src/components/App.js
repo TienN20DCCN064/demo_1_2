@@ -1,56 +1,60 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import NewUserForm from './NewUserForm';
 import UserList from './UserList';
-import {connect} from 'react-redux';
-import {getUsersRequest, createUserRequest, deleteUserRequest, usersError} from '../actions/users';
-import {Alert} from 'reactstrap';
+import { connect } from 'react-redux';
+// import {getUsersRequest, createUserRequest, deleteUserRequest, usersError} from '../actions/users';
+import { getUsersRequest } from '../actions/users';
+import { Alert } from 'reactstrap';
 
 class App extends Component {
-    constructor(props){
+    constructor(props) {
         super(props);
 
         this.props.getUsersRequest();
     }
 
-    handleCreateUserSubmit = ({firstName, lastName}) => {
-        this.props.createUserRequest({
-            firstName,
-            lastName
-        });
-    };
+    // handleCreateUserSubmit = ({firstName, lastName}) => {
+    //     this.props.createUserRequest({
+    //         firstName,
+    //         lastName
+    //     });
+    // };
 
-    handleDeleteUserClick = (userId) => {
-        this.props.deleteUserRequest(userId);
-    };
+    // handleDeleteUserClick = (userId) => {
+    //     this.props.deleteUserRequest(userId);
+    // };
 
-    handleCloseAlert = () => {
-        this.props.usersError({
-            error: ''
-        });
-    };
+    // handleCloseAlert = () => {
+    //     this.props.usersError({
+    //         error: ''
+    //     });
+    // };
 
-    render(){
+    render() {
         const users = this.props.users;
         return (
-            <div style={{margin: '0 auto', padding: '20px', maxWidth: '600px'}}>
+            <div style={{ margin: '0 auto', padding: '20px', maxWidth: '600px' }}>
                 <h2>
                     Users
                 </h2>
-                <Alert color="danger" isOpen={!!this.props.users.error} toggle={this.handleCloseAlert}>
+                {/* <Alert color="danger" isOpen={!!this.props.users.error} toggle={this.handleCloseAlert}>
                     {this.props.users.error}
-                </Alert>
-                <NewUserForm onSubmit={this.handleCreateUserSubmit} />
+                </Alert> */}
+
+                {/* <NewUserForm onSubmit={this.handleCreateUserSubmit} /> */}
+
                 {!!users.items && !!users.items.length &&
-                <UserList onDeleteUserClick={this.handleDeleteUserClick} users={users.items}/>
+                    // <UserList onDeleteUserClick={this.handleDeleteUserClick} users={users.items}/>
+                    <UserList users={users.items} />
                 }
             </div>
         );
     }
 }
 
-export default connect(({users}) => ({users}), {
+export default connect(({ users }) => ({ users }), {
     getUsersRequest,
-    createUserRequest,
-    deleteUserRequest,
-    usersError
+    // createUserRequest,
+    // deleteUserRequest,
+    // usersError
 })(App);

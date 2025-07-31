@@ -12,8 +12,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 const sagaMiddleware = createSagaMiddleware();
 
-axios.defaults.withCredentials = true;
-axios.defaults.baseURL = 'http://rem-rest-api.herokuapp.com/api';
+// axios.defaults.withCredentials = true;
+axios.defaults.baseURL = 'http://localhost:5000/api';
 
 const store = createStore(reducers, applyMiddleware(sagaMiddleware));
 
