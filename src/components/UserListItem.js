@@ -1,8 +1,8 @@
 import React from 'react';
 import { Button } from 'reactstrap';
 
-// const UserListItem = ({user, onDeleteClick}) => {
-const UserListItem = ({ user }) => {
+const UserListItem = ({ user, onDeleteClick, onUpdateClick }) => {
+
     const stringToHslColor = (str = '') => {
         let hash = 0;
         for (let i = 0; i < str.length; i++) {
@@ -15,8 +15,11 @@ const UserListItem = ({ user }) => {
 
     return (
         <div style={{ display: 'flex' }}>
+            <div style={{ paddingLeft: '10px' }}>
+                {user.id}
+            </div>
             <div style={{
-                margin: 'auto 0',
+                marginLeft: '100px',
                 textAlign: 'center',
                 height: '40px',
                 width: '40px',
@@ -32,9 +35,32 @@ const UserListItem = ({ user }) => {
                 {user.firstName} {user.lastName}
             </div>
             <div style={{ margin: 'auto 0' }}>
-                {/* <Button size="sm" color="danger" outline onClick={() => onDeleteClick(user.id)}>
+                <Button size="sm" color="danger" outline onClick={() => {
+                    if (window.confirm("bạn có muốn t xóa ko")) {
+                        onDeleteClick(user.id);
+                    }
+                }}
+                >
                     Delete
-                </Button> */}
+                </Button>
+
+
+                <Button size="sm" color="blue" outline onClick={() => {
+                    if (window.confirm(`bạn có muốn sua ko ${user.id}`)) {
+                        onUpdateClick({
+                            userId: user.id,
+                            firstName: document.getElementById("firstName").value,
+                            lastName: document.getElementById("lastName").value
+                        });
+                    }
+                }}
+                >
+                    Update
+                </Button>
+
+
+
+
             </div>
         </div>
     );

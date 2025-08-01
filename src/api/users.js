@@ -20,8 +20,15 @@ export const deleteUser = (userId) => {
 };
 
 export const updateUser = ({ userId, firstName, lastName }) => {
-    return axios.put(`/users/${userId}`,
+    console.log("update");
+    const f = document.getElementById("firstName");
+    const l = document.getElementById("lastName");
+    console.log(f.value);
+    console.log(l.value);
+    console.log(userId);
+    return axios.put(`/users/${userId}`, {
+
         firstName,
         lastName
-    )
-} 
+    });
+};

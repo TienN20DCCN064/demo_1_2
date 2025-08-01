@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import NewUserForm from './NewUserForm';
 import UserList from './UserList';
 import { connect } from 'react-redux';
-// import {getUsersRequest, createUserRequest, deleteUserRequest, usersError} from '../actions/users';
-import { getUsersRequest } from '../actions/users';
+import { getUsersRequest, createUserRequest, deleteUserRequest, updateUserRequest, usersError } from '../actions/users';
+
 import { Alert } from 'reactstrap';
 
 class App extends Component {
@@ -12,23 +12,35 @@ class App extends Component {
 
         this.props.getUsersRequest();
     }
+    handleCreateUserSubmit = ({ firstName, lastName }) => {
+        this.props.createUserRequest({
+            firstName,
+            lastName
+        });
+    };
+    handleDeleteUserSubmit = (userID) => {
+        this.props.deleteUserRequest(userID);
+    };
 
-    // handleCreateUserSubmit = ({firstName, lastName}) => {
-    //     this.props.createUserRequest({
-    //         firstName,
-    //         lastName
-    //     });
-    // };
+    handleCloseAlert = () => {
+        this.props.usersError({
+            error: ''
+        });
+    };
 
-    // handleDeleteUserClick = (userId) => {
-    //     this.props.deleteUserRequest(userId);
-    // };
 
-    // handleCloseAlert = () => {
-    //     this.props.usersError({
-    //         error: ''
-    //     });
-    // };
+    // update
+    handleUpdateUserSubmit = ({ userId, firstName, lastName }) => {
+
+        console.log("handleUpdateUserSubmit");
+        console.log("Id ", userId);
+        this.props.updateUserRequest({
+            userId,
+            firstName,
+            lastName
+        });
+    };
+
 
     render() {
         const users = this.props.users;
@@ -37,15 +49,17 @@ class App extends Component {
                 <h2>
                     Users
                 </h2>
-                {/* <Alert color="danger" isOpen={!!this.props.users.error} toggle={this.handleCloseAlert}>
+                <Alert color="danger" isOpen={!!this.props.users.error} toggle={this.handleCloseAlert}>
                     {this.props.users.error}
-                </Alert> */}
+                </Alert>
 
-                {/* <NewUserForm onSubmit={this.handleCreateUserSubmit} /> */}
+                <NewUserForm onSubmit={this.handleCreateUserSubmit} />
 
                 {!!users.items && !!users.items.length &&
-                    // <UserList onDeleteUserClick={this.handleDeleteUserClick} users={users.items}/>
-                    <UserList users={users.items} />
+                    <UserList
+                        onDeleteUserClick={this.handleDeleteUserSubmit}
+                        onUpdateUserClick={this.handleUpdateUserSubmit}
+                        users={users.items} />
                 }
             </div>
         );
@@ -54,7 +68,9 @@ class App extends Component {
 
 export default connect(({ users }) => ({ users }), {
     getUsersRequest,
-    // createUserRequest,
-    // deleteUserRequest,
-    // usersError
+    createUserRequest,
+    deleteUserRequest,
+    updateUserRequest,
+    usersError,
+
 })(App);

@@ -2,8 +2,7 @@ import React from 'react';
 import UserListItem from './UserListItem';
 import { ListGroup, ListGroupItem } from 'reactstrap';
 
-// const UserList = ({users, onDeleteUserClick}) => {
-const UserList = ({ users }) => {
+const UserList = ({users, onDeleteUserClick, onUpdateUserClick}) => {
     return (
         <ListGroup>
             {users.sort((a, b) => {
@@ -18,10 +17,18 @@ const UserList = ({ users }) => {
                 }
                 return 0;
             }).map((user) => {
+                //  console.log('User ID:', user.id); // Log ra id tại đây
                 return (
+                    
                     <ListGroupItem key={user.id}>
-                        {/* <UserListItem onDeleteClick={onDeleteUserClick} user={user} /> */}
-                        <UserListItem user={user} />
+                        {
+                            <UserListItem 
+                            onDeleteClick={onDeleteUserClick}
+                            onUpdateClick={onUpdateUserClick}
+                             user={user}
+                            
+                            />}
+                
                     </ListGroupItem>
                 );
             })}
