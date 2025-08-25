@@ -40,15 +40,16 @@ function* watchDeleteUserRequest() {
 
 function* createUser({ payload }) {
     console.log("payload");
-    console.log(payload);
     try {
         yield call(api.createUser, {
-            firstName: payload.firstName,
-            lastName: payload.lastName
+            fullName: payload.fullName,
+            email: payload.email,
+            userName: payload.userName,
+            password: payload.password,
+            roleId: payload.roleId,
+            phone: payload.phone
         });
-
         yield call(getUsers);
-
     } catch (e) {
         yield put(actions.usersError({
             error: 'An error occurred when trying to create the user'
@@ -59,30 +60,6 @@ function* createUser({ payload }) {
 function* watchCreateUserRequest() {
     yield takeLatest(actions.Types.CREATE_USER_REQUEST, createUser);
 }
-// update
-
-// function* updateUser({ payload }) {
-//     console.log("payload");
-//     console.log(payload);
-//     try {
-//         yield call(api.updateUser, {
-//             userId : payload.userId,
-//             firstName: payload.firstName,
-//             lastName: payload.lastName
-//         });
-
-//         yield call(getUsers);
-
-//     } catch (e) {
-//         yield put(actions.usersError({
-//             error: 'An error occurred when trying to update the user'
-//         }));
-//     }
-// }
-
-// function* watchUpdateUserRequest() {
-//     yield takeLatest(actions.Types.UPDATE_USER_REQUEST, updateUser);
-// }
 
 
 
@@ -95,8 +72,12 @@ function* updateUser({ payload }) {
     try {
         yield call(api.updateUser, {
             userId: payload.userId,
-            firstName: payload.firstName,
-            lastName: payload.lastName
+            fullName: payload.fullName,
+            email: payload.email,
+            userName: payload.userName,
+            password: payload.password,
+            roleId: payload.roleId,
+            phone: payload.phone
         });
 
         yield call(getUsers);

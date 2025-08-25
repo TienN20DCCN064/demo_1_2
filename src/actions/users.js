@@ -5,7 +5,17 @@ export const Types = {
     CREATE_USER_REQUEST: 'users/create_user_request',
     // update
     UPDATE_USER_REQUEST: 'users/update_user_request',
-    USERS_ERROR: 'users/user_error'
+    USERS_ERROR: 'users/user_error',
+    // account
+    GET_ACCOUNTS_REQUEST: 'users/get_accounts_request',
+    GET_ACCOUNT_REQUEST: 'users/get_account_request',
+    GET_ACCOUNT_SUCCESS: 'users/get_account_success',
+    DELETE_ACCOUNT_REQUEST: 'users/delete_account_request',
+    CREATE_ACCOUNT_REQUEST: 'users/create_account_request',
+    // search
+    SEARCH_USERS_REQUEST: 'users/search_users_request',
+    SEARCH_USERS_SUCCESS: 'users/search_users_success',
+    SEARCH_USERS_ERROR: 'users/search_users_error'
 };
 
 export const getUsersRequest = () => ({
@@ -19,26 +29,40 @@ export const getUsersSuccess = ({ items }) => ({
     }
 });
 
-export const createUserRequest = ({ firstName, lastName }) => ({
+// export const createUserRequest = ({ firstName, lastName }) => ({
+//     type: Types.CREATE_USER_REQUEST,
+//     payload: {
+//         firstName,
+//         lastName
+//     }
+// });
+export const createUserRequest = ({ fullName, email, userName, password, roleId, phone }) => ({
     type: Types.CREATE_USER_REQUEST,
     payload: {
-        firstName,
-        lastName
+        fullName,
+        email,
+        userName,
+        password,
+        roleId,
+        phone
     }
 });
-
 export const deleteUserRequest = (userId) => ({
     type: Types.DELETE_USER_REQUEST,
     payload: {
         userId
     }
 });
-export const updateUserRequest = ({ userId, firstName, lastName }) => ({
+export const updateUserRequest = ({ userId, fullName, email, userName, password, roleId, phone }) => ({
     type: Types.UPDATE_USER_REQUEST,
     payload: {
         userId,
-        firstName,
-        lastName
+        fullName,
+        email,
+        userName,
+        password,
+        roleId,
+        phone
     }
 });
 
@@ -49,3 +73,5 @@ export const usersError = ({ error }) => ({
         error
     }
 });
+
+

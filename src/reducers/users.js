@@ -1,4 +1,4 @@
-import {Types} from '../actions/users';
+import { Types } from '../actions/users';
 
 const INITIAL_STATE = {
     items: []
@@ -6,7 +6,7 @@ const INITIAL_STATE = {
 
 export default function users(state = INITIAL_STATE, action) {
     switch (action.type) {
-        case Types.GET_USERS_SUCCESS:{
+        case Types.GET_USERS_SUCCESS: {
             return {
                 ...state,
                 items: action.payload.items
@@ -18,6 +18,19 @@ export default function users(state = INITIAL_STATE, action) {
                 error: action.payload.error
             }
         }
+        // case Types.SEARCH_USERS_SUCCESS:
+        //     return {
+        //         ...state,
+        //         items: action.payload.items,
+        //         error: null
+        //     };
+
+        // case Types.SEARCH_USERS_ERROR:
+        //     return {
+        //         ...state,
+        //         error: action.payload.error
+        //     };
+
         default: {
             return state;
         }

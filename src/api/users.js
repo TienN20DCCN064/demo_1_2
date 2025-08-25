@@ -2,7 +2,6 @@ import axios from 'axios';
 
 
 
-
 export const getUsers = () => {
     return axios.get('/users', {
         params: {
@@ -14,62 +13,33 @@ export const getUser = (userId) => {
     return axios.get(`/users/${userId}`);
 };
 
-export const createUser = ({ firstName, lastName }) => {
+// Tạo user mới
+export const createUser = ({ fullName, email, userName, password, roleId, phone }) => {
+    console.log("create user", fullName, email, userName, password, roleId, phone);
     return axios.post('/users', {
-        firstName,
-        lastName
+        fullName,
+        email,
+        userName,
+        password,
+        roleId,
+        phone
     });
 };
+
 
 export const deleteUser = (userId) => {
     return axios.delete(`/users/${userId}`);
 };
 
-export const updateUser = ({ userId, firstName, lastName }) => {
-    console.log("update");
-    // const f = document.getElementById("firstName");
-    // const l = document.getElementById("lastName");
-    // console.log(f.value);
-    // console.log(l.value);
-    console.log(userId);
+// Cập nhật user
+export const updateUser = ({ userId, fullName, email, userName, password, roleId, phone }) => {
+    console.log("update user", userId);
     return axios.put(`/users/${userId}`, {
-
-        firstName,
-        lastName
+        fullName,
+        email,
+        userName,
+        password,
+        roleId,
+        phone
     });
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
