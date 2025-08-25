@@ -1,11 +1,17 @@
 import axios from 'axios';
 
+
+
+
 export const getUsers = () => {
     return axios.get('/users', {
         params: {
             limit: 1000
         }
     });
+};
+export const getUser = (userId) => {
+    return axios.get(`/users/${userId}`);
 };
 
 export const createUser = ({ firstName, lastName }) => {
@@ -21,10 +27,10 @@ export const deleteUser = (userId) => {
 
 export const updateUser = ({ userId, firstName, lastName }) => {
     console.log("update");
-    const f = document.getElementById("firstName");
-    const l = document.getElementById("lastName");
-    console.log(f.value);
-    console.log(l.value);
+    // const f = document.getElementById("firstName");
+    // const l = document.getElementById("lastName");
+    // console.log(f.value);
+    // console.log(l.value);
     console.log(userId);
     return axios.put(`/users/${userId}`, {
 
@@ -32,3 +38,38 @@ export const updateUser = ({ userId, firstName, lastName }) => {
         lastName
     });
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
