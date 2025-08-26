@@ -6,7 +6,7 @@ const UserList = ({ users, onDeleteUserClick, onEditUserClick }) => {
     // sắp xếp users theo firstName, lastName
     // In ra trước khi sắp xếp
     console.log(users);
-    console.log("Trước khi sắp xếp:", users.map(u => u.fullname));
+    console.log("Trước khi sắp xếp:", users.map(u => u.fullName));
 
     // Sắp xếp
     const sortedUsers = [...users].sort((a, b) => {
