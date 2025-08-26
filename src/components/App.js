@@ -61,9 +61,6 @@ class App extends Component {
         }
     }
     // handle_Create_or_Update_userSubmit = ({ firstName, lastName }) => {
-
-    // }
-    // handle_Create_or_Update_userSubmit = ({ firstName, lastName }) => {
     //     const name_button = document.getElementById('button').innerText;
     //     // di chuyển màn hình lên button
     //     // Cuộn màn hình tới button

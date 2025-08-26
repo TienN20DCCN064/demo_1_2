@@ -9,7 +9,8 @@ class AddUserForm extends Component {
     formRef = React.createRef();
 
     state = {
-        avatarUrl: null, // nếu sau này dùng upload avatar
+        avatarUrl: null,
+        avatarFileName: null // thêm để lưu tên file
     };
     componentDidUpdate(prevProps) {
         if (
@@ -17,20 +18,27 @@ class AddUserForm extends Component {
             this.props.initialValues !== prevProps.initialValues
         ) {
             this.formRef.current.setFieldsValue(this.props.initialValues);
+            // Nếu có image thì set avatarUrl để hiển thị ảnh cũ
+            if (this.props.initialValues.image) {
+                this.setState({ avatarUrl: this.props.initialValues.image });
+            }
         }
     }
 
     handleAdd = (value) => {
-        console.log("Received values of form: ", value);
-        if (this.props.onAdd_or_UpdateUser) {
-            this.props.onAdd_or_UpdateUser(value); // push value lên component cha
+        // Nếu có avatarFileName thì gán vào image
+        if (this.state.avatarFileName) {
+            value.image = `/images/images_api/${this.state.avatarFileName}`;
+        } else if (!value.image) {
+            value.image = "/images/images_api/img_default.jpg";
         }
-        // đọc url xem có phải là user-add
+        if (this.props.onAdd_or_UpdateUser) {
+            this.props.onAdd_or_UpdateUser(value);
+        }
         const isAddUser = window.location.pathname.includes("user-add");
         if (isAddUser) {
-            this.handleReset(); // reset form sau khi thêm
+            this.handleReset();
         }
-
     };
 
     // --- Handle khi nhấn Hủy ---
@@ -61,26 +69,42 @@ class AddUserForm extends Component {
                 initialValues={this.props.initialValues}
             >
                 {/* Avatar upload */}
-                <Form.Item label="Avatar">
+
+                <Form.Item label="Avatar" name="image">
                     <Upload
                         listType="picture-card"
+                        name="image"
                         showUploadList={false}
                         beforeUpload={(file) => {
-                            // Giới hạn định dạng ảnh nếu muốn
                             const isImage = file.type.startsWith("image/");
                             if (!isImage) {
                                 message.error("Chỉ cho phép upload hình ảnh!");
+                                return Upload.LIST_IGNORE;
                             }
-                            return isImage || Upload.LIST_IGNORE;
+                            // Tạo URL tạm để hiển thị preview
+                            const previewUrl = URL.createObjectURL(file);
+                            this.setState({ avatarUrl: previewUrl, avatarFileName: file.name });
+                            // Không upload file, chỉ lấy tên file
+                            return Upload.LIST_IGNORE;
                         }}
                     >
-                        <Avatar
-                            size={64}
-                            style={{ cursor: "pointer" }}
-                            icon={<UploadOutlined />}
+                        <img
+                            src={this.state.avatarUrl || "/images/images_api/img_default.jpg"}
+                            alt="Avatar"
+                            style={{
+                                width: this.state.avatarUrl ? "90px" : "100px", // nếu không có avatarUrl thì dùng 100px
+                                height: "100px",
+                                objectFit: "cover",
+                                cursor: "pointer",
+                                display: "block",
+                            }}
                         />
+
                     </Upload>
                 </Form.Item>
+
+
+
                 <Row gutter={16}>
                     <Col span={12}>
                         <Form.Item

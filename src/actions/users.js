@@ -36,7 +36,7 @@ export const getUsersSuccess = ({ items }) => ({
 //         lastName
 //     }
 // });
-export const createUserRequest = ({ fullName, email, userName, password, roleId, phone }) => ({
+export const createUserRequest = ({ fullName, email, userName, password, roleId, phone, image }) => ({
     type: Types.CREATE_USER_REQUEST,
     payload: {
         fullName,
@@ -44,7 +44,8 @@ export const createUserRequest = ({ fullName, email, userName, password, roleId,
         userName,
         password,
         roleId,
-        phone
+        phone,
+        image
     }
 });
 export const deleteUserRequest = (userId) => ({
@@ -53,7 +54,7 @@ export const deleteUserRequest = (userId) => ({
         userId
     }
 });
-export const updateUserRequest = ({ userId, fullName, email, userName, password, roleId, phone }) => ({
+export const updateUserRequest = ({ userId, fullName, email, userName, password, roleId, phone, image }) => ({
     type: Types.UPDATE_USER_REQUEST,
     payload: {
         userId,
@@ -62,7 +63,8 @@ export const updateUserRequest = ({ userId, fullName, email, userName, password,
         userName,
         password,
         roleId,
-        phone
+        phone,
+        image
     }
 });
 

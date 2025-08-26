@@ -48,19 +48,25 @@ const Sidebar = () => {
     >
       <div
         style={{
-          height: 64,
+          height: 80,
           margin: 16,
           background: "rgba(255, 255, 255, 0.2)",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          fontSize: 18,
-          fontWeight: "bold",
-          color: "white",
         }}
       >
-        CMS
+        <img
+          src="/images/cms.png"
+          alt="CMS"
+          style={{
+            height: "100%", // chiếm hết chiều cao của div
+            width: "100%", // chiều rộng tự động
+            objectFit: "contain", // giữ tỉ lệ ảnh
+          }}
+        />
       </div>
+
       <Menu
         theme="dark"
         mode="inline"

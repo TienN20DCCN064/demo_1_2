@@ -11,16 +11,16 @@ app.use(bodyParser.json());
 // 👇 đặt ở trên cùng App.js
 // Bảng người dùng (chỉ thông tin cá nhân)
 let users = [
-  { id: 1, fullName: 'Peter Mackenzie', email: 'peter@example.com', userName: 'pmackenzie', password: 'admin123', roleId: 'Admin', phone: '123456789' },
-  { id: 2, fullName: 'Cind Zhang', email: 'cindy@example.com', userName: 'czhang', password: 'test123', roleId: 'Test', phone: '987654321' },
-  { id: 3, fullName: 'Ted Smith', email: 'ted@example.com', userName: 'tsmith', password: 'test456', roleId: 'Test', phone: '456789123' },
-  { id: 4, fullName: 'Susan Fernbrook', email: 'susan@example.com', userName: 'sfern', password: 'test789', roleId: 'Test', phone: '321654987' },
-  { id: 5, fullName: 'Emily Kim', email: 'emily@example.com', userName: 'ekim', password: 'admin456', roleId: 'Admin', phone: '654321789' },
-  { id: 6, fullName: 'Peter Zhang', email: 'pzhang@example.com', userName: 'pzhang', password: 'user123', roleId: 'User', phone: '789456123' },
-  { id: 7, fullName: 'Cindy Smith', email: 'csmith@example.com', userName: 'csmith', password: 'user456', roleId: 'User', phone: '321654987' },
-  { id: 8, fullName: 'Ted Fernbrook', email: 'tedf@example.com', userName: 'tfern', password: 'test999', roleId: 'Test', phone: '654321789' },
-  { id: 9, fullName: 'Susan Kim', email: 'susan.k@example.com', userName: 'skim', password: 'user789', roleId: 'User', phone: '789456123' },
-  { id: 10, fullName: 'Emily Mackenzie', email: 'emac@example.com', userName: 'emac', password: 'admin789', roleId: 'Admin', phone: '321654987' },
+  { id: 1, fullName: 'Peter Mackenzie', email: 'peter@example.com', userName: 'pmackenzie', password: 'admin123', roleId: 'Admin', phone: '123456789', image: '/images/images_api/img1.jpg' },
+  { id: 2, fullName: 'Cind Zhang', email: 'cindy@example.com', userName: 'czhang', password: 'test123', roleId: 'Test', phone: '987654321', image: '' },
+  { id: 3, fullName: 'Ted Smith', email: 'ted@example.com', userName: 'tsmith', password: 'test456', roleId: 'Test', phone: '456789123', image: '/images/images_api/cms.png' },
+  { id: 4, fullName: 'Susan Fernbrook', email: 'susan@example.com', userName: 'sfern', password: 'test789', roleId: 'Test', phone: '321654987', image: '/images/images_api/img1.jpg' },
+  { id: 5, fullName: 'Emily Kim', email: 'emily@example.com', userName: 'ekim', password: 'admin456', roleId: 'Admin', phone: '654321789', image: '/images/images_api/cms.png' },
+  { id: 6, fullName: 'Peter Zhang', email: 'pzhang@example.com', userName: 'pzhang', password: 'user123', roleId: 'User', phone: '789456123', image: '/images/images_api/cms.png' },
+  { id: 7, fullName: 'Cindy Smith', email: 'csmith@example.com', userName: 'csmith', password: 'user456', roleId: 'User', phone: '321654987', image: '/images/images_api/img1.jpg' },
+  { id: 8, fullName: 'Ted Fernbrook', email: 'tedf@example.com', userName: 'tfern', password: 'test999', roleId: 'Test', phone: '654321789', image: '/images/images_api/cms.png' },
+  { id: 9, fullName: 'Susan Kim', email: 'susan.k@example.com', userName: 'skim', password: 'user789', roleId: 'User', phone: '789456123', image: '/images/images_api/cms.png' },
+  { id: 10, fullName: 'Emily Mackenzie', email: 'emac@example.com', userName: 'emac', password: 'admin789', roleId: 'Admin', phone: '321654987', image: '/images/images_api/cms.png' },
 ];
 
 // Bảng quyền
@@ -62,10 +62,10 @@ app.get('/api/users/:id', (req, res) => {
 });
 
 app.post('/api/users', (req, res) => {
-  const { fullName, email, userName, password, roleId, phone } = req.body;
+  const { fullName, email, userName, password, roleId, phone, image } = req.body;
 
   // Bỏ email ra khỏi validate
-  if (!fullName || !userName || !password || !roleId || !phone) {
+  if (!fullName || !userName || !password || !roleId || !phone || !image) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 
@@ -76,7 +76,8 @@ app.post('/api/users', (req, res) => {
     userName,
     password,
     roleId,
-    phone
+    phone,
+    image: image || ""
   };
   users.push(newUser);
   res.status(201).json(newUser);
@@ -84,17 +85,19 @@ app.post('/api/users', (req, res) => {
 
 
 app.put('/api/users/:id', (req, res) => {
-  const { fullName, email, userName, password, roleId, phone } = req.body;
+  const { fullName, email, userName, password, roleId, phone , image } = req.body;
   const user = users.find(u => u.id === parseInt(req.params.id));
   if (!user) return res.status(404).json({ error: 'User not found' });
 
   user.fullName = fullName ?? user.fullName;
-  // Cho phép email rỗng, nếu không gửi thì giữ nguyên
+  // Cho phép email và image rỗng, nếu không gửi thì giữ nguyên
   if (email !== undefined) user.email = email;
   user.userName = userName ?? user.userName;
   user.password = password ?? user.password;
   user.roleId = roleId ?? user.roleId;
   user.phone = phone ?? user.phone;
+  user.image = image ?? user.image;
+
 
   res.json(user);
 });

@@ -14,15 +14,16 @@ export const getUser = (userId) => {
 };
 
 // Tạo user mới
-export const createUser = ({ fullName, email, userName, password, roleId, phone }) => {
-    console.log("create user", fullName, email, userName, password, roleId, phone);
+export const createUser = ({ fullName, email, userName, password, roleId, phone, image }) => {
+    console.log("create user", fullName, email, userName, password, roleId, phone, image);
     return axios.post('/users', {
         fullName,
         email,
         userName,
         password,
         roleId,
-        phone
+        phone,
+        image
     });
 };
 
@@ -32,14 +33,15 @@ export const deleteUser = (userId) => {
 };
 
 // Cập nhật user
-export const updateUser = ({ userId, fullName, email, userName, password, roleId, phone }) => {
-    console.log("update user", userId);
+export const updateUser = ({ userId, fullName, email, userName, password, roleId, phone, image }) => {
+    console.log(userId, fullName, email, userName, password, roleId, phone, image);
     return axios.put(`/users/${userId}`, {
         fullName,
         email,
         userName,
         password,
         roleId,
-        phone
+        phone,
+        image
     });
 };

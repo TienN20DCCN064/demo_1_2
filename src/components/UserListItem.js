@@ -4,7 +4,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import * as api from '../api/users';
 
 let CURRENT = 1;
-let PAGE_SIZE = 5;
+let PAGE_SIZE = 10;
 
 function handleCheckPageParam() {
   const query = new URLSearchParams(window.location.search);
@@ -62,33 +62,39 @@ const UserListItem = ({ data, onDeleteClick, onEditClick }) => {
     {
       title: "#",
       key: "image",
-      // căn giữa và in đậm
       align: "center",
-
-      width: 50, // nhỏ lại
+      width: 50,
       render: (_, record) => (
-        <div style={{ display: "flex", alignItems: "center", fontWeight: "bold" }}>
-          {/* Avatar tròn */}
-          <div
-            style={{
-              textAlign: "center",
-              height: "40px",
-              width: "40px",
-              lineHeight: "40px",
-              borderRadius: "50%",
-              color: "white",
-              fontWeight: "bold",
-              background: stringToHslColor(record.fullName),
-            }}
-          >
-            {record.fullName
-              ? record.fullName[0].toUpperCase()
-              : ""} {record.fullName
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
+          {record.image ? (
+            <img
+              src={record.image}
+              alt={record.fullName}
+              style={{
+                height: "40px",
+                width: "40px",
+                borderRadius: "50%", // hình tròn
+                objectFit: "cover",   // giữ tỉ lệ và cắt vừa div
+              }}
+            />
+          ) : (
+            <div
+              style={{
+                textAlign: "center",
+                height: "40px", 
+                width: "40px",
+                lineHeight: "40px",
+                borderRadius: "50%",
+                color: "white",
+                fontWeight: "bold",
+                background: stringToHslColor(record.fullName),
+              }}
+            >
+              {record.fullName
                 ? record.fullName[0].toUpperCase()
                 : ""}
-          </div>
-
-
+            </div>
+          )}
         </div>
       ),
     },
@@ -212,7 +218,7 @@ const UserListItem = ({ data, onDeleteClick, onEditClick }) => {
   ];
   return (
     <Table
-     size="small" // làm table gọn hơn, chữ cũng hơi nhỏ
+      size="small" // làm table gọn hơn, chữ cũng hơi nhỏ
       rowKey="id"
       columns={columns}
       dataSource={data}

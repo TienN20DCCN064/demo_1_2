@@ -4,11 +4,19 @@ import { List } from "antd";
 import { Table } from "antd";
 const UserList = ({ users, onDeleteUserClick, onEditUserClick }) => {
     // sắp xếp users theo firstName, lastName
+    // In ra trước khi sắp xếp
+    console.log(users);
+    console.log("Trước khi sắp xếp:", users.map(u => u.fullname));
+
+    // Sắp xếp
     const sortedUsers = [...users].sort((a, b) => {
-        if (a.fullname > b.fullname) return 1;
-        if (a.fullname < b.fullname) return -1;
-        return 0;
+        const nameA = (a.fullName || "").trim().toLowerCase();
+        const nameB = (b.fullName || "").trim().toLowerCase();
+        return nameA.localeCompare(nameB);
     });
+
+    // In ra sau khi sắp xếp
+    console.log("Sau khi sắp xếp:", sortedUsers.map(u => u.fullName));
 
     // Thêm index để render cột STT
     const usersWithIndex = sortedUsers.map((user, index) => ({

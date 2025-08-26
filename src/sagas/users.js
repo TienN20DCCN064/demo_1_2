@@ -47,7 +47,8 @@ function* createUser({ payload }) {
             userName: payload.userName,
             password: payload.password,
             roleId: payload.roleId,
-            phone: payload.phone
+            phone: payload.phone,
+            image: payload.image
         });
         yield call(getUsers);
     } catch (e) {
@@ -77,7 +78,8 @@ function* updateUser({ payload }) {
             userName: payload.userName,
             password: payload.password,
             roleId: payload.roleId,
-            phone: payload.phone
+            phone: payload.phone,
+            image: payload.image
         });
 
         yield call(getUsers);
