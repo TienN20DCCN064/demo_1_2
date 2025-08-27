@@ -15,7 +15,10 @@ export const Types = {
     // search
     SEARCH_USERS_REQUEST: 'users/search_users_request',
     SEARCH_USERS_SUCCESS: 'users/search_users_success',
-    SEARCH_USERS_ERROR: 'users/search_users_error'
+    SEARCH_USERS_ERROR: 'users/search_users_error',
+    // phân trang
+    GET_USERS_PAGE_REQUEST: 'users/get_users_page_request',
+    GET_USERS_PAGE_SUCCESS: 'users/get_users_page_success',
 };
 
 export const getUsersRequest = () => ({
@@ -28,7 +31,23 @@ export const getUsersSuccess = ({ items }) => ({
         items
     }
 });
-
+export const getUsersPageRequest = ({ page, pageSize }) => ({
+    type: Types.GET_USERS_PAGE_REQUEST,
+    payload: {
+        page,
+        pageSize
+    }
+});
+export const getUsersPageSuccess = ({ items, page, pageSize, total, totalPages }) => ({
+    type: Types.GET_USERS_PAGE_SUCCESS,
+    payload: {
+        items,
+        page,
+        pageSize,
+        total,
+        totalPages
+    }
+});
 // export const createUserRequest = ({ firstName, lastName }) => ({
 //     type: Types.CREATE_USER_REQUEST,
 //     payload: {

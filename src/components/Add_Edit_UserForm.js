@@ -13,17 +13,21 @@ class AddUserForm extends Component {
         avatarFileName: null // thêm để lưu tên file
     };
     componentDidUpdate(prevProps) {
-        if (
-            this.props.initialValues &&
-            this.props.initialValues !== prevProps.initialValues
-        ) {
-            this.formRef.current.setFieldsValue(this.props.initialValues);
-            // Nếu có image thì set avatarUrl để hiển thị ảnh cũ
-            if (this.props.initialValues.image) {
-                this.setState({ avatarUrl: this.props.initialValues.image });
+        const { initialValues } = this.props;
+        if (initialValues && initialValues !== prevProps.initialValues) {
+            // Reset toàn bộ trước khi set để tránh giữ giá trị cũ
+            this.formRef.current.resetFields();
+            this.formRef.current.setFieldsValue(initialValues);
+
+            // Nếu có ảnh thì hiển thị ảnh cũ
+            if (initialValues.image) {
+                this.setState({ avatarUrl: initialValues.image });
+            } else {
+                this.setState({ avatarUrl: null });
             }
         }
     }
+
 
     handleAdd = (value) => {
         // Nếu có avatarFileName thì gán vào image
@@ -41,11 +45,12 @@ class AddUserForm extends Component {
         }
     };
 
-    // --- Handle khi nhấn Hủy ---
+
     handleCancel = () => {
-        //   this.props.onCancel(); // callback từ component cha
         this.handleReset(); // reset form
-        window.location.href = "/users"; // chuyển hướng về trang /users
+        if (this.props.onCancel) {
+            this.props.onCancel(); // gọi callback từ cha
+        }
     };
 
     // --- Reset form và state ---

@@ -29,30 +29,71 @@ let roles = [
   { id: "Test", name: "ROLE TEST" },
   { id: "User", name: "ROLE USER" }
 ];
+// Hàm sắp xếp người dùng theo fullName
+function sortUsers(usersArray) {
+  // Clone mảng để không mutate dữ liệu gốc
+  const sortedUsers = [...usersArray].sort((a, b) => {
+    const nameA = (a.fullName || "").trim().toLowerCase();
+    const nameB = (b.fullName || "").trim().toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+
+  // Thêm index (STT)
+  const usersWithIndex = sortedUsers.map((user, index) => ({
+    ...user,
+    index: index + 1
+  }));
+
+  return usersWithIndex;
+}
 
 // ================= USERS ===================
+// Lấy users theo phân trang
+app.get('/api/users/paging', (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 5;
 
-// Lấy toàn bộ users
+  // 1️⃣ Sắp xếp trước
+  const sortedUsers = sortUsers(users);
+
+  // 2️⃣ Tính chỉ số phân trang
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+
+  // 3️⃣ Lấy danh sách phân trang
+  const pagedUsers = sortedUsers.slice(startIndex, endIndex);
+
+  res.json({
+    data: pagedUsers,
+    page: page,
+    pageSize: pageSize,
+    total: users.length,
+    totalPages: Math.ceil(users.length / pageSize)
+  });
+});
+
+
+// Lấy toàn bộ users nhưng giả lập trả về rỗng
 app.get('/api/users', (req, res) => {
   res.json({
-    data: users,
+    data: [],   // 👈 trả về rỗng
     offset: 0,
-    limit: users.length,
-    total: users.length
+    limit: 0,
+    total: 0
   });
 });
 
 // ================= USERS ===================
 
 // Lấy toàn bộ users
-app.get('/api/users', (req, res) => {
-  res.json({
-    data: users,
-    offset: 0,
-    limit: users.length,
-    total: users.length
-  });
-});
+// app.get('/api/users', (req, res) => {
+//   res.json({
+//     data: users,
+//     offset: 0,
+//     limit: users.length,
+//     total: users.length
+//   });
+// });
 
 // Lấy 1 user theo id
 app.get('/api/users/:id', (req, res) => {
@@ -85,7 +126,7 @@ app.post('/api/users', (req, res) => {
 
 
 app.put('/api/users/:id', (req, res) => {
-  const { fullName, email, userName, password, roleId, phone , image } = req.body;
+  const { fullName, email, userName, password, roleId, phone, image } = req.body;
   const user = users.find(u => u.id === parseInt(req.params.id));
   if (!user) return res.status(404).json({ error: 'User not found' });
 
@@ -152,6 +193,7 @@ app.delete('/api/roles/:id', (req, res) => {
   const deletedRole = roles.splice(index, 1);
   res.json(deletedRole[0]);
 });
+// phân trang
 
 // Khởi động server
 app.listen(PORT, () => {

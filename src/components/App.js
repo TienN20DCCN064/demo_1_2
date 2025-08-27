@@ -4,7 +4,7 @@ import UserList from './UserList';
 import AddEditUserForm from './Add_Edit_UserForm';
 import { connect } from 'react-redux';
 import {
-    getUsersRequest, createUserRequest, deleteUserRequest, updateUserRequest, usersError
+    getUsersRequest, createUserRequest, getUsersPageRequest, deleteUserRequest, updateUserRequest, usersError
 } from '../actions/users';
 
 import 'antd/dist/reset.css'; // nếu dùng AntD v5
@@ -42,7 +42,10 @@ class App extends Component {
     }
     // componentDidMount() {// tránh lỗi khi reset lại trang là lỗi ui
     async componentDidMount() {
-        this.props.getUsersRequest();
+        const params = new URLSearchParams(window.location.search);
+        const page = parseInt(params.get("page"), 10) || 1;
+        const pageSize = parseInt(params.get("pageSize"), 10) || 5;
+        this.props.getUsersPageRequest({ page, pageSize });
         if (window.location.pathname === "/") {
             window.history.pushState({}, "", "/users");
             this.forceUpdate();
@@ -53,6 +56,9 @@ class App extends Component {
             this.setState({ editingUser });
         }
     }
+    handlePageChange = (page, pageSize) => {
+        this.props.getUsersPageRequest({ page, pageSize });
+    };
     async componentDidUpdate(prevProps) {
         // Nếu chuyển sang /user-edit thì lấy lại dữ liệu user
         if (window.location.pathname === "/user-edit" && !this.state.editingUser) {
@@ -60,29 +66,7 @@ class App extends Component {
             this.setState({ editingUser });
         }
     }
-    // handle_Create_or_Update_userSubmit = ({ firstName, lastName }) => {
-    //     const name_button = document.getElementById('button').innerText;
-    //     // di chuyển màn hình lên button
-    //     // Cuộn màn hình tới button
 
-    //     console.log(document.getElementById('button').innerText);
-    //     if (name_button === Str_Create) {
-    //         this.props.createUserRequest({
-    //             firstName,
-    //             lastName
-    //         });
-    //     }
-    //     else if (name_button === Str_Update) {
-    //         console.log("button is edit");
-
-    //         this.handleUpdateUserSubmit({
-    //             userId: this.state.editingUser.userId,
-    //             firstName,
-    //             lastName
-    //         });
-    //     }
-    //     document.getElementById('button').innerText = Str_Create
-    // };
     handleDeleteUserSubmit = (userID) => {
         this.props.deleteUserRequest(userID);
     };
@@ -155,24 +139,41 @@ class App extends Component {
     handleCreateUserSubmit = (userData) => {
         // userData là object nhận từ AddUserForm
         this.props.createUserRequest(userData);
-        console.log("Creating user with data:", userData);
-        message.success("Tạo người dùng thành công!"); // thêm thông báo antd là thành công
+        // Lấy lại query cũ từ URL
+        const query = window.location.search;
+        window.history.pushState({}, "", "/users" + query);
+
+        this.forceUpdate(); // ép render lại App
         // Sau khi tạo xong có thể chuyển hướng về /users
         //        window.location.href = "/users";
     };
     handleEditUserSubmit = (userData) => {
         console.log("Editing user with data:", userData);
-        // lây id ở url
         const userId = new URLSearchParams(window.location.search).get("id");
-        this.props.updateUserRequest({ userId, ...userData });
+        // thêm userId và form userData
+        const data = { userId, ...userData };
+        console.log("Data sent to updateUserRequest:", data);
+        // lây id ở url
+
+        this.props.updateUserRequest(data);
 
         message.success("Cập nhật người dùng thành công!"); // thêm thông báo antd là thành công
+        // Lấy lại query cũ từ URL
+        const query = window.location.search;
+        window.history.pushState({}, "", "/users" + query);
+
+        this.forceUpdate(); // ép render lại App 
     };
     onClickEditUser = (userData) => {
         window.history.pushState({}, "", `/user-edit?id=${userData.userId}`);
         this.forceUpdate();
     };
+    handleCancelUserForm = () => {
+         const query = window.location.search;
+        window.history.pushState({}, "", "/users" + query);
 
+        this.forceUpdate(); // ép render lại App 
+    };
     renderContent = () => {
         const path = window.location.pathname;
         const users = this.props.users;
@@ -181,6 +182,7 @@ class App extends Component {
 
         switch (path) {
             case "/users":
+
                 // Lấy dữ liệu để render: nếu đang filter thì dùng filteredUsers, nếu chưa thì dùng toàn bộ users.items
                 const usersToRender = this.state.filteredUsers || (this.props.users.items || []);
 
@@ -228,25 +230,18 @@ class App extends Component {
                             />
                         )}
 
-                        {/* <NewUserForm
-                            onSubmit={this.handle_Create_or_Update_userSubmit}
-                            editingUser={this.state.editingUser}
-                            onResetEditMode={this.handleResetEditMode}
-                        /> */}
-
-                        {/* {!!users.items && !!users.items.length && (
-                            <UserList
-                                onDeleteUserClick={this.handleDeleteUserSubmit}
-                                onEditUserClick={this.handleEditUserClick}
-                                users={users.items}
-                            />
-                        )} */}
                         {!!usersToRender.length && (
                             <UserList
                                 onDeleteUserClick={this.handleDeleteUserSubmit}
                                 onEditUserClick={this.onClickEditUser}
                                 users={usersToRender}
+                                currentPage={this.props.users.page}   // <-- cái này từ redux
+                                onPageChange={this.handlePageChange}
+                                pageSize={this.props.users.pageSize}
+                                total={this.props.users.total}
+                                totalPages={this.props.users.totalPages}
                             />
+
                         )}
                     </>
                 );
@@ -268,11 +263,13 @@ class App extends Component {
 
                         <AddEditUserForm
                             onAdd_or_UpdateUser={this.handleCreateUserSubmit} // 👈 sửa lại prop này
+                            onCancel={this.handleCancelUserForm}
                         />
 
                     </>
                 );
             case "/user-edit":
+
                 return (
                     <>
                         <Breadcrumb>
@@ -288,8 +285,9 @@ class App extends Component {
                         </Breadcrumb>
 
                         <AddEditUserForm
-                            onAdd_or_UpdateUser={this.handleEditUserSubmit} // 👈 
-                            initialValues={this.state.editingUser} // 👈 truyền dữ liệu vào form
+                            onAdd_or_UpdateUser={this.handleEditUserSubmit}
+                            initialValues={this.state.editingUser}
+                            onCancel={this.handleCancelUserForm}
                         />
 
                     </>
@@ -346,9 +344,11 @@ class App extends Component {
 
 export default connect(({ users }) => ({ users }), {
     getUsersRequest,
+    getUsersPageRequest,
     createUserRequest,
     deleteUserRequest,
     updateUserRequest,
+
     usersError,
 
 })(App);

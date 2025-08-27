@@ -1,6 +1,13 @@
 import axios from 'axios';
 
-
+export const getUsers_page = ({ page, pageSize }) => {
+    return axios.get('/users/paging', {
+        params: {
+            page,
+            pageSize
+        }
+    });
+};
 
 export const getUsers = () => {
     return axios.get('/users', {
@@ -9,6 +16,7 @@ export const getUsers = () => {
         }
     });
 };
+
 export const getUser = (userId) => {
     return axios.get(`/users/${userId}`);
 };

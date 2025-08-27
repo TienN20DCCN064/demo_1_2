@@ -1,65 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import UserListItem from "./UserListItem";
-import { List } from "antd";
-import { Table } from "antd";
-const UserList = ({ users, onDeleteUserClick, onEditUserClick }) => {
-    // sắp xếp users theo firstName, lastName
-    // In ra trước khi sắp xếp
-    console.log(users);
-    console.log("Trước khi sắp xếp:", users.map(u => u.fullName));
 
-    // Sắp xếp
-    const sortedUsers = [...users].sort((a, b) => {
-        const nameA = (a.fullName || "").trim().toLowerCase();
-        const nameB = (b.fullName || "").trim().toLowerCase();
-        return nameA.localeCompare(nameB);
-    });
-
-    // In ra sau khi sắp xếp
-    console.log("Sau khi sắp xếp:", sortedUsers.map(u => u.fullName));
-
-    // Thêm index để render cột STT
-    const usersWithIndex = sortedUsers.map((user, index) => ({
-        ...user,
-        index: index + 1,
-    }));
-
-
-    // Quản lý currentPage bằng state
-    const getCurrentPageFromUrl = () => {
-        const params = new URLSearchParams(window.location.search);
-        const page = parseInt(params.get("page"), 10);
-        return isNaN(page) ? 1 : page;
-    };
-    const [currentPage, setCurrentPage] = useState(getCurrentPageFromUrl());
-
-    // Khi URL thay đổi (F5 hoặc chuyển trang), cập nhật state
-    useEffect(() => {
-        setCurrentPage(getCurrentPageFromUrl());
-    }, []);
-
-    // Hàm cập nhật param page trên URL và state
-    const handlePageChange = (page, pageSize) => {
-        const params = new URLSearchParams(window.location.search);
-        params.set("page", page);
-        window.history.replaceState(
-            {},
-            "",
-            `${window.location.pathname}?${params.toString()}`
-        );
-        setCurrentPage(page);
-    };
-
+const UserList = ({ 
+    users, 
+    onDeleteUserClick, 
+    onEditUserClick, 
+    onPageChange, 
+    pageSize, 
+    total, 
+    totalPages, 
+    currentPage   // lấy từ props, không tạo state nữa
+}) => {
     return (
         <UserListItem
-            data={usersWithIndex}
+            data={users}
             onDeleteClick={onDeleteUserClick}
             onEditClick={onEditUserClick}
             currentPage={currentPage}
-            onPageChange={handlePageChange}
+            onPageChange={onPageChange}
+            pageSize={pageSize}
+            total={total}
+            totalPages={totalPages}
         />
     );
-
 };
 
 export default UserList;
+
