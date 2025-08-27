@@ -1,4 +1,4 @@
-import { takeEvery, takeLatest, take, call, put, fork ,select} from 'redux-saga/effects';
+import { takeEvery, takeLatest, take, call, put, fork, select } from 'redux-saga/effects';
 import * as actions from '../actions/users';
 import * as api from '../api/users';
 
@@ -31,17 +31,23 @@ function* getCurrentPaging() {
     const state = yield select();
     const page = state.users.page || 1;
     const pageSize = state.users.pageSize || 5;
-    return { page, pageSize };
+    const name = state.users.name || '';
+    const phone = state.users.phone || '';
+    return { page, pageSize, name, phone };
 }
+
+
 function* getUsers_page({ payload }) {
     try {
-        const result = yield call(api.getUsers_page, payload);
+        const result = yield call(api.getUsers_page, payload); // payload có thể là { page, pageSize, name, phone }
         yield put(actions.getUsersPageSuccess({
             items: result.data.data,
             page: result.data.page,
             pageSize: result.data.pageSize,
             total: result.data.total,
-            totalPages: result.data.totalPages
+            totalPages: result.data.totalPages,
+            name: payload.name || '',   // phải gửi lại filter
+            phone: payload.phone || ''
         }));
     } catch (e) {
         yield put(actions.usersError({
@@ -49,16 +55,27 @@ function* getUsers_page({ payload }) {
         }));
     }
 }
+
 function* watchGetUsersPageRequest() {
     yield takeEvery(actions.Types.GET_USERS_PAGE_REQUEST, getUsers_page);
+}
+
+function getPagingFromUrl() {
+    const params = new URLSearchParams(window.location.search);
+    return {
+        page: parseInt(params.get("page"), 10) || 1,
+        pageSize: parseInt(params.get("pageSize"), 10) || 5,
+        name: params.get("name") || "",
+        phone: params.get("phone") || ""
+    };
 }
 
 function* deleteUser(userId) {
     try {
         yield call(api.deleteUser, userId);
-        // Lấy lại danh sách theo phân trang
-        const { page, pageSize } = yield getCurrentPaging();
-        yield put(actions.getUsersPageRequest({ page, pageSize }));
+        // Lấy lại danh sách theo phân trang từ URL
+        const { page, pageSize, name, phone } = getPagingFromUrl();
+        yield put(actions.getUsersPageRequest({ page, pageSize, name, phone }));
     } catch (e) {
         yield put(actions.usersError({
             error: 'An error occurred when trying to delete the user'
@@ -85,8 +102,8 @@ function* createUser({ payload }) {
             image: payload.image
         });
         // Lấy lại danh sách theo phân trang
-        const { page, pageSize } = yield getCurrentPaging();
-        yield put(actions.getUsersPageRequest({ page, pageSize }));
+        const { page, pageSize, name, phone } = getPagingFromUrl();
+        yield put(actions.getUsersPageRequest({ page, pageSize, name, phone }));
     } catch (e) {
         yield put(actions.usersError({
             error: 'An error occurred when trying to create the user'
@@ -113,8 +130,8 @@ function* updateUser({ payload }) {
             image: payload.image
         });
         // Lấy lại danh sách theo phân trang
-        const { page, pageSize } = yield getCurrentPaging();
-        yield put(actions.getUsersPageRequest({ page, pageSize }));
+        const { page, pageSize, name, phone } = getPagingFromUrl();
+        yield put(actions.getUsersPageRequest({ page, pageSize, name, phone }));
     } catch (e) {
         yield put(actions.usersError({
             error: 'An error occurred when trying to create the user'

@@ -31,11 +31,13 @@ export const getUsersSuccess = ({ items }) => ({
         items
     }
 });
-export const getUsersPageRequest = ({ page, pageSize }) => ({
+export const getUsersPageRequest = ({ page, pageSize, name = '', phone = '' }) => ({
     type: Types.GET_USERS_PAGE_REQUEST,
     payload: {
         page,
-        pageSize
+        pageSize,
+        name,
+        phone
     }
 });
 export const getUsersPageSuccess = ({ items, page, pageSize, total, totalPages }) => ({
@@ -86,6 +88,11 @@ export const updateUserRequest = ({ userId, fullName, email, userName, password,
         image
     }
 });
+export const searchUsersRequest = ({ page = 1, pageSize = 5, name = '', phone = '' }) => ({
+    type: Types.GET_USERS_PAGE_REQUEST,   // dùng lại saga getUsers_page
+    payload: { page, pageSize, name, phone }
+});
+
 
 
 export const usersError = ({ error }) => ({

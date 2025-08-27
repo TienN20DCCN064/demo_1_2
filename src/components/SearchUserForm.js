@@ -6,9 +6,21 @@ class UserSearchBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: "",
-      phone: ""
+      name: props.initialName || "",
+      phone: props.initialPhone || ""
     };
+  }
+  componentDidUpdate(prevProps) {
+    // Nếu giá trị filter thay đổi thì cập nhật lại state
+    if (
+      prevProps.initialName !== this.props.initialName ||
+      prevProps.initialPhone !== this.props.initialPhone
+    ) {
+      this.setState({
+        name: this.props.initialName || "",
+        phone: this.props.initialPhone || ""
+      });
+    }
   }
 
   handleInputChange = (e, field) => {

@@ -1,13 +1,16 @@
 import axios from 'axios';
 
-export const getUsers_page = ({ page, pageSize }) => {
+export const getUsers_page = ({ page, pageSize, name, phone }) => {
     return axios.get('/users/paging', {
         params: {
             page,
-            pageSize
+            pageSize,
+            name,    // thêm
+            phone    // thêm
         }
     });
 };
+
 
 export const getUsers = () => {
     return axios.get('/users', {

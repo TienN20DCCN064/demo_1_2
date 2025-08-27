@@ -45,7 +45,10 @@ class App extends Component {
         const params = new URLSearchParams(window.location.search);
         const page = parseInt(params.get("page"), 10) || 1;
         const pageSize = parseInt(params.get("pageSize"), 10) || 5;
-        this.props.getUsersPageRequest({ page, pageSize });
+        const name = params.get("name") || "";
+        const phone = params.get("phone") || "";
+        console.log("Fetching users with:", { page, pageSize, name, phone });
+        this.props.getUsersPageRequest({ page, pageSize, name, phone });
         if (window.location.pathname === "/") {
             window.history.pushState({}, "", "/users");
             this.forceUpdate();
@@ -56,9 +59,14 @@ class App extends Component {
             this.setState({ editingUser });
         }
     }
+    // ...existing code...
     handlePageChange = (page, pageSize) => {
-        this.props.getUsersPageRequest({ page, pageSize });
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get("name") || "";
+        const phone = params.get("phone") || "";
+        this.props.getUsersPageRequest({ page, pageSize, name, phone });
     };
+    // ...existing code...
     async componentDidUpdate(prevProps) {
         // Nếu chuyển sang /user-edit thì lấy lại dữ liệu user
         if (window.location.pathname === "/user-edit" && !this.state.editingUser) {
@@ -80,99 +88,106 @@ class App extends Component {
         this.setState({ editingUser: null });
         document.getElementById('button').innerText = Str_Create;
     };
-    // update
-    // handleEditUserClick = async ({ userId }) => {
 
-    //     const data_userId = await api.getUser(userId);
-    //     document.getElementById('button').innerText = Str_Update;
-    //     this.setState({
-    //         editingUser: {
-    //             userId,
-    //             firstName: data_userId.data.firstName,
-    //             lastName: data_userId.data.lastName,
-    //         }
-    //     });
-    // };
-
-
-    // update
-    // handleUpdateUserSubmit = async ({ userId, firstName, lastName }) => {
-    //     this.props.updateUserRequest({
-    //         userId,
-    //         firstName,
-    //         lastName
-    //     });
-    //     // Reset form
-    //     this.setState({
-    //         editingUser: null
-    //     });
-    // };
 
     handleSearchSubmit = async (searchTerm) => {
         this.props.searchUsersRequest(searchTerm);  // dispatch action search
         console.log("searchTerm in App.js", searchTerm);
     };
     // handleSearch
+    // ...existing code...
     handleSearch = (searchTerm) => {
         console.log("Tìm kiếm với:", searchTerm);
-        // Lấy danh sách users từ props
-        const usersList = this.props.users.items || [];
-        // Lọc danh sách theo name và/hoặc phone
-        const filteredUsers = usersList.filter(u => {
-            const fullName = `${u.fullName}`.toLowerCase();
-            const matchName = !searchTerm.name || fullName.includes(searchTerm.name.toLowerCase());
-            // Nếu có phone, thêm điều kiện filter (giả sử u.phone tồn tại)
-            const matchPhone = !searchTerm.phone || (u.phone && u.phone.includes(searchTerm.phone));
-            return matchName && matchPhone;
-        });
-        // Lưu kết quả lọc vào state
-        console.log("filteredUsers:", filteredUsers);
-        //  DATA_LIST_USERS = filteredUsers;
-        this.setState({ filteredUsers });
-    };
 
+        // 1️⃣ Lấy toàn bộ URL param hiện tại
+        const params = new URLSearchParams(window.location.search);
+
+        // 2️⃣ Cập nhật/ghi đè param mới
+        if (searchTerm.name) {
+            params.set("name", searchTerm.name);
+        } else {
+            params.delete("name");
+        }
+        if (searchTerm.phone) {
+            params.set("phone", searchTerm.phone);
+        } else {
+            params.delete("phone");
+        }
+        // 👉 Luôn về trang đầu khi search
+        params.set("page", 1);
+
+        // 3️⃣ Cập nhật lại URL (không reload trang)
+        window.history.pushState({}, "", `${window.location.pathname}?${params.toString()}`);
+
+        // 4️⃣ Gọi action lấy dữ liệu mới với param tìm kiếm
+        const page = parseInt(params.get("page"), 10) || 1;
+        const pageSize = parseInt(params.get("pageSize"), 10) || 5;
+        const name = params.get("name") || "";
+        const phone = params.get("phone") || "";
+        const number = 1;
+        console.log("Fetching users with:", { number, pageSize, name, phone });
+        this.props.getUsersPageRequest({ number, pageSize, name, phone });
+    };
+    // ...existing code...
+
+
+    // ...existing code...
     handleResetSearch = () => {
-        // Reset danh sách về ban đầu
-        this.setState({ filteredUsers: this.props.users.items || [] });
+        // Xóa param name & phone khỏi URL
+        const params = new URLSearchParams(window.location.search);
+        params.delete("name");
+        params.delete("phone");
+
+        const page = parseInt(params.get("page"), 10) || 1;
+        const pageSize = parseInt(params.get("pageSize"), 10) || 5;
+
+        const newUrl = `${window.location.pathname}?page=${page}&pageSize=${pageSize}`;
+        window.history.pushState({}, "", newUrl);
+
+        // Gọi lại danh sách không filter
+        this.props.getUsersPageRequest({ page, pageSize });
     };
-    // Thêm hàm này vào class App:
+    // ...existing code...
+
+    // ...existing code...
     handleCreateUserSubmit = (userData) => {
-        // userData là object nhận từ AddUserForm
         this.props.createUserRequest(userData);
-        // Lấy lại query cũ từ URL
-        const query = window.location.search;
-        window.history.pushState({}, "", "/users" + query);
-
-        this.forceUpdate(); // ép render lại App
-        // Sau khi tạo xong có thể chuyển hướng về /users
-        //        window.location.href = "/users";
-    };
-    handleEditUserSubmit = (userData) => {
-        console.log("Editing user with data:", userData);
-        const userId = new URLSearchParams(window.location.search).get("id");
-        // thêm userId và form userData
-        const data = { userId, ...userData };
-        console.log("Data sent to updateUserRequest:", data);
-        // lây id ở url
-
-        this.props.updateUserRequest(data);
-
-        message.success("Cập nhật người dùng thành công!"); // thêm thông báo antd là thành công
-        // Lấy lại query cũ từ URL
-        const query = window.location.search;
-        window.history.pushState({}, "", "/users" + query);
-
-        this.forceUpdate(); // ép render lại App 
-    };
-    onClickEditUser = (userData) => {
-        window.history.pushState({}, "", `/user-edit?id=${userData.userId}`);
+        // Lấy lại các param filter (loại bỏ id nếu có)
+        const params = new URLSearchParams(window.location.search);
+        params.delete("id");
+        const queryString = params.toString();
+        window.history.pushState({}, "", "/users" + (queryString ? "?" + queryString : ""));
         this.forceUpdate();
     };
-    handleCancelUserForm = () => {
-         const query = window.location.search;
-        window.history.pushState({}, "", "/users" + query);
+    // ...existing code...
+    handleEditUserSubmit = (userData) => {
+        const params = new URLSearchParams(window.location.search);
+        const userId = params.get("id");
+        const data = { userId, ...userData };
+        this.props.updateUserRequest(data);
+        message.success("Cập nhật người dùng thành công!");
+        // Quay lại /users, loại bỏ id, giữ lại các filter
+        params.delete("id");
+        window.history.pushState({}, "", `/users?${params.toString()}`);
 
-        this.forceUpdate(); // ép render lại App 
+        
+        this.forceUpdate();
+    };
+
+    handleCancelUserForm = () => {
+        // Quay lại /users, loại bỏ id, giữ lại các filter
+        const params = new URLSearchParams(window.location.search);
+        params.delete("id");
+        window.history.pushState({}, "", `/users?${params.toString()}`);
+        this.forceUpdate();
+    };
+
+    onClickEditUser = (userData) => {
+        // Giữ lại các param filter khi chuyển sang user-edit
+        const params = new URLSearchParams(window.location.search);
+        params.set("id", userData.userId);
+        window.history.pushState({}, "", `/user-edit?${params.toString()}`);
+        this.forceUpdate();
     };
     renderContent = () => {
         const path = window.location.pathname;
@@ -185,6 +200,11 @@ class App extends Component {
 
                 // Lấy dữ liệu để render: nếu đang filter thì dùng filteredUsers, nếu chưa thì dùng toàn bộ users.items
                 const usersToRender = this.state.filteredUsers || (this.props.users.items || []);
+                // Lấy giá trị filter từ URL
+                const params = new URLSearchParams(window.location.search);
+                const filterName = params.get("name") || "";
+                const filterPhone = params.get("phone") || "";
+                console.log("Filter from URL:", { filterName, filterPhone });
 
                 return (
                     <>
@@ -200,6 +220,8 @@ class App extends Component {
                         <SearchUserForm
                             onSearch={this.handleSearch}
                             onReset={this.handleResetSearch}
+                            initialName={filterName}
+                            initialPhone={filterPhone}
                         />
                         <Button
                             type="primary"
@@ -210,8 +232,13 @@ class App extends Component {
                                 marginRight: '10px'  // cách lề phải 10px
                             }}
                             onClick={() => {
-                                window.history.pushState({}, "", "/user-add");
-                                this.forceUpdate(); // ép render lại
+                                // Lấy lại các param filter hiện tại
+                                const params = new URLSearchParams(window.location.search);
+                                // Xóa id nếu có (chỉ giữ filter)
+                                params.delete("id");
+                                const queryString = params.toString();
+                                window.history.pushState({}, "", "/user-add" + (queryString ? "?" + queryString : ""));
+                                this.forceUpdate();
                             }}
                         >
                             Thêm người dùng

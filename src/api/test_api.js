@@ -49,28 +49,43 @@ function sortUsers(usersArray) {
 
 // ================= USERS ===================
 // Lấy users theo phân trang
+// Lấy users theo phân trang và hỗ trợ tìm kiếm
 app.get('/api/users/paging', (req, res) => {
   const page = parseInt(req.query.page) || 1;
   const pageSize = parseInt(req.query.pageSize) || 5;
+  const nameSearch = (req.query.name || '').toLowerCase();
+  const phoneSearch = (req.query.phone || '').toLowerCase();
 
   // 1️⃣ Sắp xếp trước
-  const sortedUsers = sortUsers(users);
+  let sortedUsers = sortUsers(users);
 
-  // 2️⃣ Tính chỉ số phân trang
+  // 2️⃣ Lọc theo name và phone nếu có
+  if (nameSearch || phoneSearch) {
+    sortedUsers = sortedUsers.filter(u => {
+      const fullName = (u.fullName || '').toLowerCase();
+      const phone = (u.phone || '').toLowerCase();
+      const matchName = !nameSearch || fullName.includes(nameSearch);
+      const matchPhone = !phoneSearch || phone.includes(phoneSearch);
+      return matchName && matchPhone;
+    });
+  }
+
+  // 3️⃣ Tính chỉ số phân trang
   const startIndex = (page - 1) * pageSize;
   const endIndex = startIndex + pageSize;
 
-  // 3️⃣ Lấy danh sách phân trang
+  // 4️⃣ Lấy danh sách phân trang
   const pagedUsers = sortedUsers.slice(startIndex, endIndex);
 
   res.json({
     data: pagedUsers,
     page: page,
     pageSize: pageSize,
-    total: users.length,
-    totalPages: Math.ceil(users.length / pageSize)
+    total: sortedUsers.length,
+    totalPages: Math.ceil(sortedUsers.length / pageSize)
   });
 });
+
 
 
 // Lấy toàn bộ users nhưng giả lập trả về rỗng
