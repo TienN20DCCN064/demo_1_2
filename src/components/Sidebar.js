@@ -10,7 +10,6 @@ const { Sider } = Layout;
 
 const Sidebar = () => {
   const handleMenuClick = ({ key }) => {
-    // 👇 chuyển trang trực tiếp ở đây
     switch (key) {
       case "users":
         window.location.href = "/users";
@@ -24,12 +23,14 @@ const Sidebar = () => {
       case "system":
         window.location.href = "/system";
         break;
+      case "role":
+        window.location.href = "/role";
+        break;
       default:
         window.location.href = "/";
     }
   };
 
-  // 👇 lấy key active theo URL hiện tại
   const currentPath = window.location.pathname;
   let selectedKey = "users"; // mặc định
 
@@ -37,6 +38,13 @@ const Sidebar = () => {
   else if (currentPath.startsWith("/user-groups")) selectedKey = "user-groups";
   else if (currentPath.startsWith("/courses")) selectedKey = "course-management";
   else if (currentPath.startsWith("/system")) selectedKey = "system";
+  else if (currentPath.startsWith("/role")) selectedKey = "role";
+
+  // xác định menu cha mở theo selectedKey
+  let openKey = "user-management"; // mặc định
+  if (selectedKey === "role") openKey = "system";
+  else if (selectedKey === "users" || selectedKey === "user-groups") openKey = "user-management";
+  else openKey = "";
 
   return (
     <Sider
@@ -60,9 +68,9 @@ const Sidebar = () => {
           src="/images/cms.png"
           alt="CMS"
           style={{
-            height: "100%", // chiếm hết chiều cao của div
-            width: "100%", // chiều rộng tự động
-            objectFit: "contain", // giữ tỉ lệ ảnh
+            height: "100%",
+            width: "100%",
+            objectFit: "contain",
           }}
         />
       </div>
@@ -70,8 +78,8 @@ const Sidebar = () => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultOpenKeys={["user-management"]}
-        selectedKeys={[selectedKey]} // 👈 active menu theo URL
+        defaultOpenKeys={[openKey]} // 👈 mở menu cha tương ứng
+        selectedKeys={[selectedKey]}
         onClick={handleMenuClick}
         items={[
           {
@@ -98,6 +106,12 @@ const Sidebar = () => {
             key: "system",
             icon: <SettingOutlined />,
             label: "Hệ thống",
+            children: [
+              {
+                key: "role",
+                label: "Quyền Hạn",
+              },
+            ],
           },
         ]}
       />

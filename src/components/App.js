@@ -1,21 +1,35 @@
 import React, { Component } from 'react';
 import NewUserForm from './NewUserForm';
 import UserList from './UserList';
+import RoleList from './role/RoleList';
+
+import SearchUserForm from "./SearchUserForm";
 import AddEditUserForm from './Add_Edit_UserForm';
+import AddEditRoleForm from './role/Add_Edit_RoleForm';
+
+
+import SearchRoleForm from './role/SearchRoleForm';
+
+
 import { connect } from 'react-redux';
 import {
-    getUsersRequest, createUserRequest, getUsersPageRequest, deleteUserRequest, updateUserRequest, usersError
+    getUsersRequest, createUserRequest, getUsersPageRequest, deleteUserRequest, updateUserRequest, usersError,
 } from '../actions/users';
+import {
+    getRolesRequest, getRolesSuccess, getRolesError, deleteRoleRequest, getRolesPageRequest
+} from '../actions/role';
 
 import 'antd/dist/reset.css'; // nếu dùng AntD v5
 import * as api from '../api/users';
 // import { Alert } from 'reactstrap';
-import { Alert, Modal, Layout, Breadcrumb, Button, message } from "antd"; // thêm message
+import { Alert, Modal, Layout, Breadcrumb, Button, message, Spin } from "antd"; // thêm message
 
 import Sidebar from "./Sidebar";
 import HeaderUserInfo from "./HeaderUserInfo";
-import SearchUserForm from "./SearchUserForm";
+
 import { PlusOutlined } from "@ant-design/icons";
+import LoadingOverlay from "./LoadingOverlay"; // import component vừa tạo
+
 
 
 const { Content } = Layout;
@@ -29,6 +43,7 @@ class App extends Component {
         super(props);
         this.state = {
             editingUser: null,
+            loading: false, // Thêm trạng thái loading
         };
     }
     async fetchEditingUser() {
@@ -41,23 +56,29 @@ class App extends Component {
         return null;
     }
     // componentDidMount() {// tránh lỗi khi reset lại trang là lỗi ui
+
     async componentDidMount() {
+        this.setState({ loading: true });
         const params = new URLSearchParams(window.location.search);
         const page = parseInt(params.get("page"), 10) || 1;
-        const pageSize = parseInt(params.get("pageSize"), 10) || 5;
+        const pageSize = parseInt(params.get("pageSize"), 10) || 10;
         const name = params.get("name") || "";
         const phone = params.get("phone") || "";
-        console.log("Fetching users with:", { page, pageSize, name, phone });
-        this.props.getUsersPageRequest({ page, pageSize, name, phone });
+
+        // Gọi action để lấy danh sách users
+        await this.props.getUsersPageRequest({ page, pageSize, name, phone });
+
+        // Xử lý URL hiện tại
         if (window.location.pathname === "/") {
             window.history.pushState({}, "", "/users");
-            this.forceUpdate();
-        }
-        // Nếu đang ở /user-edit thì lấy dữ liệu user
-        if (window.location.pathname === "/user-edit") {
+        } else if (window.location.pathname === "/user-edit") {
             const editingUser = await this.fetchEditingUser();
             this.setState({ editingUser });
+        } else if (window.location.pathname === "/role") {
+            await this.props.getRolesRequest();
         }
+
+        this.setState({ loading: false });
     }
     // ...existing code...
     handlePageChange = (page, pageSize) => {
@@ -121,15 +142,38 @@ class App extends Component {
 
         // 4️⃣ Gọi action lấy dữ liệu mới với param tìm kiếm
         const page = parseInt(params.get("page"), 10) || 1;
-        const pageSize = parseInt(params.get("pageSize"), 10) || 5;
+        const pageSize = parseInt(params.get("pageSize"), 10) || 10;
         const name = params.get("name") || "";
         const phone = params.get("phone") || "";
         const number = 1;
         console.log("Fetching users with:", { number, pageSize, name, phone });
         this.props.getUsersPageRequest({ number, pageSize, name, phone });
     };
-    // ...existing code...
+    handleSearchRoleName = (searchTerm) => {
+        console.log("Tìm kiếm vai trò với:", searchTerm);
+        // 1️⃣ Lấy toàn bộ URL param hiện tại
+        const params = new URLSearchParams(window.location.search);
 
+        // 2️⃣ Cập nhật/ghi đè param mới
+        if (searchTerm.nameRole) {
+            params.set("nameRole", searchTerm.nameRole);
+        } else {
+            params.delete("nameRole");
+        }
+
+        // 👉 Luôn về trang đầu khi search
+        params.set("page", 1);
+
+        // 3️⃣ Cập nhật lại URL (không reload trang)
+        window.history.pushState({}, "", `${window.location.pathname}?${params.toString()}`);
+        console.log("Updated URL:", `${window.location.pathname}?${params.toString()}`);
+        // 4️⃣ Gọi action lấy dữ liệu mới với param tìm kiếm
+        const page = parseInt(params.get("page"), 10) || 1;
+        const pageSize = parseInt(params.get("pageSize"), 10) || 10;
+        const nameRole = params.get("nameRole") || "";
+        console.log("Fetching roles with:", { page, pageSize, nameRole });
+        this.props.getRolesPageRequest({ page, pageSize, nameRole });
+    };
 
     // ...existing code...
     handleResetSearch = () => {
@@ -139,7 +183,7 @@ class App extends Component {
         params.delete("phone");
 
         const page = parseInt(params.get("page"), 10) || 1;
-        const pageSize = parseInt(params.get("pageSize"), 10) || 5;
+        const pageSize = parseInt(params.get("pageSize"), 10) || 10;
 
         const newUrl = `${window.location.pathname}?page=${page}&pageSize=${pageSize}`;
         window.history.pushState({}, "", newUrl);
@@ -148,8 +192,21 @@ class App extends Component {
         this.props.getUsersPageRequest({ page, pageSize });
     };
     // ...existing code...
+    handleResetSearchRoleName = () => {
+        // Xóa param nameRole khỏi URL
+        const params = new URLSearchParams(window.location.search);
+        params.delete("nameRole");
 
-    // ...existing code...
+        const page = parseInt(params.get("page"), 10) || 1;
+        const pageSize = parseInt(params.get("pageSize"), 10) || 10;
+
+        const newUrl = `${window.location.pathname}?page=${page}&pageSize=${pageSize}`;
+        window.history.pushState({}, "", newUrl);
+
+        // Gọi lại danh sách không filter
+        this.props.getRolesPageRequest({ page, pageSize });
+    };
+
     handleCreateUserSubmit = (userData) => {
         this.props.createUserRequest(userData);
         // Lấy lại các param filter (loại bỏ id nếu có)
@@ -170,7 +227,7 @@ class App extends Component {
         params.delete("id");
         window.history.pushState({}, "", `/users?${params.toString()}`);
 
-        
+
         this.forceUpdate();
     };
 
@@ -189,7 +246,76 @@ class App extends Component {
         window.history.pushState({}, "", `/user-edit?${params.toString()}`);
         this.forceUpdate();
     };
+
+    onClickEditRole = (role) => {
+        const params = new URLSearchParams(window.location.search);
+        params.set("id", role.roleId);
+        window.history.pushState({}, "", `/role-edit?${params.toString()}`);
+        this.forceUpdate();
+    };
+    // go_page_role = () => {
+    //     const params = new URLSearchParams(window.location.search);
+    //     console.log("params in go_page_role:", params.toString());
+    //     params.set("page", 1);
+    //     params.set("pageSize", 10);
+    //     window.history.pushState({}, "", `/role?${params.toString()}`);
+
+    //     // Gọi lại redux action lấy dữ liệu roles
+    //     this.props.getRolesRequest();
+    //     this.forceUpdate();
+    // };
+    go_page_role = () => {
+        const params = new URLSearchParams(window.location.search);
+        console.log("params in go_page_role (before):", params.toString());
+
+        // 🔍 Đảm bảo luôn có page và pageSize mặc định
+        if (!params.has("page")) {
+            params.set("page", 1);
+        }
+        if (!params.has("pageSize")) {
+            params.set("pageSize", 10);
+        }
+
+        window.history.pushState({}, "", `/role?${params.toString()}`);
+        console.log("params in go_page_role (after):", params.toString());
+
+        // ✅ Lấy param ra và truyền hết vào Redux
+        const page = params.get("page") || 1;
+        const pageSize = params.get("pageSize") || 10;
+        const nameRole = params.get("nameRole") || "";
+        // ✅ nếu có nameRole thì set xuống state để input hiển thị lại
+        this.setState({ searchRoleName: nameRole });
+
+        this.props.getRolesPageRequest({ page, pageSize, nameRole });
+
+        // ❌ không nên forceUpdate trừ khi bất đắc dĩ
+        this.forceUpdate();
+    };
+
+    handleDeleteRoleSubmit = (roleId) => {
+        // Gọi redux action hoặc API delete role
+        this.props.deleteRoleRequest(roleId); // nếu bạn có action deleteRoleRequest
+
+        message.success("Xóa quyền thành công!");
+        // Nếu không dùng redux, có thể gọi API trực tiếp
+        // api.deleteRole(roleId).then(() => { ... })
+    };
+    handleCheck_dataNull_goOtherPage = (usersToRender) => {
+        const params = new URLSearchParams(window.location.search);
+        if (usersToRender.length === 0 && params.get("page") > 1) {
+            const page = params.get("page") - 1;
+            params.set("page", page);
+            window.history.pushState({}, "", `/users?${params.toString()}`);
+            this.props.getUsersPageRequest({ page, pageSize: params.get("pageSize") || 10, name: params.get("name") || "", phone: params.get("phone") || "" });
+
+            // console.log("No users found, navigating to previous page");
+        }
+    };
+
     renderContent = () => {
+        if (this.state.loading) {
+            return <Spin tip="Đang tải dữ liệu..." />;
+        }
         const path = window.location.pathname;
         const users = this.props.users;
         // DATA_LIST_USERS = users.items || [];
@@ -205,7 +331,8 @@ class App extends Component {
                 const filterName = params.get("name") || "";
                 const filterPhone = params.get("phone") || "";
                 console.log("Filter from URL:", { filterName, filterPhone });
-
+                console.log("usersToRender:", usersToRender);
+                this.handleCheck_dataNull_goOtherPage(usersToRender);
                 return (
                     <>
                         <Breadcrumb>
@@ -322,6 +449,110 @@ class App extends Component {
 
             case "/system":
                 return <h2>Trang hệ thống</h2>;
+            case "/role":
+
+                // Lấy giá trị filter từ URL
+                const paramsRole = new URLSearchParams(window.location.search);
+                const filterRoleName = paramsRole.get("nameRole") || "";
+                console.log("Filter from URL:", { filterRoleName });
+
+
+
+                return (
+                    <>
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <span style={{ color: "#1890ff" }}>Trang chủ</span>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <span style={{ color: "#000" }}>Quyền Hạn</span>
+                            </Breadcrumb.Item>
+                        </Breadcrumb>
+
+                        <SearchRoleForm
+                            onSearch={this.handleSearchRoleName}
+                            onReset={this.handleResetSearchRoleName}
+                            initialRoleName={filterRoleName}
+
+                        />
+                        <Button
+                            type="primary"
+                            icon={<PlusOutlined />}
+                            style={{
+                                marginBottom: '16px',
+                                float: 'right',      // đưa sang bên phải
+                                marginRight: '10px'  // cách lề phải 10px
+                            }}
+                            onClick={() => {
+                                // Lấy lại các param filter hiện tại
+                                const params = new URLSearchParams(window.location.search);
+                                // Xóa id nếu có (chỉ giữ filter)
+                                params.delete("id");
+                                const queryString = params.toString();
+                                window.history.pushState({}, "", "/role-add" + (queryString ? "?" + queryString : ""));
+                                this.forceUpdate();
+                            }}
+                        >
+                            Thêm mới
+                        </Button>
+
+
+                        <div style={{ marginTop: '100px' }}></div>
+                        <RoleList
+                            roles={this.props.roles.items || []}
+                            onDeleteRoleClick={this.handleDeleteRoleSubmit}
+                            onEditRoleClick={this.onClickEditRole}
+                            currentPage={this.props.roles.page}
+                            onPageChange={() => { }}
+                            pageSize={10}
+                            total={0}
+                            totalPages={1}
+                        />
+                    </>
+                );
+
+            case "/role-add":
+                return (
+                    <>
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <span style={{ color: "#1890ff" }}>Trang chủ</span>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <span style={{ color: "#1890ff" }}>Quyền Hạn</span>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <span style={{ color: "#000" }}>Thêm Quyền</span>
+                            </Breadcrumb.Item>
+                        </Breadcrumb>
+                        <AddEditRoleForm go_page_role={this.go_page_role} />
+
+                    </>
+                );
+
+            case "/role-edit":
+                return (
+                    <>
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <span style={{ color: "#1890ff" }}>Trang chủ</span>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <span style={{ color: "#1890ff" }}>Quyền Hạn</span>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <span style={{ color: "#000" }}>Sửa Quyền</span>
+                            </Breadcrumb.Item>
+                        </Breadcrumb>
+                        <AddEditRoleForm go_page_role={this.go_page_role} />
+
+
+
+
+                    </>
+                );
+
+
 
             default:
                 return (
@@ -351,8 +582,6 @@ class App extends Component {
             <>
                 {/* <Layout style={{ minHeight: "100vh", background: "#f0f2f5" }}>  👈 xám nhạt */}
                 <Layout style={{ minHeight: "100vh", background: "#000" }}>  {/* 👈 đen */}
-
-
                     <Sidebar />
                     <Layout style={{ padding: "16px" }}>
                         <HeaderUserInfo />
@@ -362,6 +591,9 @@ class App extends Component {
                         </Content>
                     </Layout>
                 </Layout>
+                {/* 👇 thêm cái overlay loading ở đây */}
+                <LoadingOverlay loading={this.props.users.loading || this.props.roles.loading} />
+
 
 
             </>
@@ -369,7 +601,7 @@ class App extends Component {
     }
 }
 
-export default connect(({ users }) => ({ users }), {
+export default connect(({ users, roles }) => ({ users, roles }), {
     getUsersRequest,
     getUsersPageRequest,
     createUserRequest,
@@ -377,6 +609,12 @@ export default connect(({ users }) => ({ users }), {
     updateUserRequest,
 
     usersError,
+
+    getRolesRequest,
+    deleteRoleRequest,
+    getRolesSuccess,
+    getRolesError,
+    getRolesPageRequest
 
 })(App);
 

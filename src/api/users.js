@@ -56,3 +56,4 @@ export const updateUser = ({ userId, fullName, email, userName, password, roleId
         image
     });
 };
+

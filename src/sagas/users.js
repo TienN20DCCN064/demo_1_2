@@ -18,23 +18,6 @@ function* getUsers() {
 function* watchGetUsersRequest() {
     yield takeEvery(actions.Types.GET_USERS_REQUEST, getUsers);
 }
-// export const getUsers_page = ({ page, pageSize }) => {
-//     return axios.get('/users/paging', {
-//         params: {
-//             page,
-//             pageSize
-//         }
-//     });
-// };
-// Helper lấy page/pageSize hiện tại từ state
-function* getCurrentPaging() {
-    const state = yield select();
-    const page = state.users.page || 1;
-    const pageSize = state.users.pageSize || 5;
-    const name = state.users.name || '';
-    const phone = state.users.phone || '';
-    return { page, pageSize, name, phone };
-}
 
 
 function* getUsers_page({ payload }) {
@@ -64,7 +47,7 @@ function getPagingFromUrl() {
     const params = new URLSearchParams(window.location.search);
     return {
         page: parseInt(params.get("page"), 10) || 1,
-        pageSize: parseInt(params.get("pageSize"), 10) || 5,
+        pageSize: parseInt(params.get("pageSize"), 10) || 10,
         name: params.get("name") || "",
         phone: params.get("phone") || ""
     };
@@ -142,6 +125,8 @@ function* updateUser({ payload }) {
 function* watchUpdateUserRequest() {
     yield takeLatest(actions.Types.UPDATE_USER_REQUEST, updateUser);
 }
+// role
+
 
 const userSagas = [
     fork(watchGetUsersRequest),

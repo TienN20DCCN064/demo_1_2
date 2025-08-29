@@ -25,10 +25,203 @@ let users = [
 
 // Bảng quyền
 let roles = [
-  { id: "Admin", name: "ROLE ADMIN" },
-  { id: "Test", name: "ROLE TEST" },
-  { id: "User", name: "ROLE USER" }
+  {
+    id: "Admin",
+    name: "ROLE ADMIN",
+    mo_ta: "Quyền cao nhất, có thể quản lý người dùng và quyền",
+    permissions: {
+      GET_LIST_SUBJECT_HISTORY: 1,
+      GET_SUBJECT_HISTORY: 1,
+      DELETE_GROUP: 1,
+      DELETE_GROUP_PERMISSION: 1,
+      UPDATE_LECTURE_CONTENT: 1,
+      GET_LECTURE_CONTENT: 1,
+      GET_LECTURE_CONTENT_BY_ID: 1,
+      DELETE_LECTURE_CONTENT: 1,
+      CREATE_LECTURE_CONTENT: 1,
+      GET_LIST_LECTURE_CONTENT: 1,
+      UPLOAD_VIDEO: 1,
+      UPLOAD_FILE: 1,
+      CREATE_ACCOUNT_BOOK: 1,
+      DELETE_ACCOUNT_BOOK: 1,
+      GET_ACCOUNT_BOOK: 1,
+      GET_LIST_ACCOUNT_BOOK: 1,
+      SYNC_BOOK_PERMISSION: 1,
+      DELETE_BOOK_PERMISSION: 1,
+      GET_BOOK_PERMISSION: 1,
+      GET_LIST_BOOK_PERMISSION: 1,
+      LIST_ACCOUNT_GROUP: 1,
+      GET_ACCOUNT_GROUP: 1,
+      DELETE_ACCOUNT_GROUP: 1,
+      LIST_CATEGORY: 1,
+      GET_CATEGORY: 1,
+      UPDATE_CATEGORY: 1,
+      CREATE_CATEGORY: 1,
+      DELETE_CATEGORY: 1,
+      GET_LECTURE_BY_SUBJECT: 1,
+      GET_LIST_LECTURE: 1,
+      UPDATE_LECTURE: 1,
+      CREATE_LECTURE: 1,
+      DELETE_LECTURE: 1,
+      UPDATE_SORT_LECTURE: 1,
+      DELETE_PUBLISHER: 1,
+      GET_PUBLISHER: 1,
+      CREATE_PUBLISHER: 1,
+      GET_LIST_PUBLISHER: 1,
+      DELETE_READER: 1,
+      GET_READER: 1,
+      CREATE_READER: 1,
+      GET_LIST_READER: 1,
+      UPDATE_READER: 1,
+      CREATE_SETTING: 1,
+      GET_SETTING: 1,
+      GET_LIST_SETTING: 1,
+      UPDATE_SETTING: 1,
+      CREATE_PERMISSION: 1,
+      LIST_PERMISSION: 1,
+      UPDATE_GROUP_PERMISSION: 1,
+      GET_GROUP_PERMISSION: 1,
+      CREATE_GROUP_PERMISSION: 1,
+      GET_LIST_GROUP_PERMISSION: 1,
+      UPDATE_ADMIN_ACCOUNT: 1,
+      CREATE_ADMIN_ACCOUNT: 1,
+      DELETE_ACCOUNT: 1,
+      GET_ACCOUNT: 1,
+      GET_LIST_ACCOUNT: 1,
+    },
+  },
+  {
+    id: "Test",
+    name: "ROLE TEST",
+    mo_ta: "Quyền kiểm tra, có thể xem và kiểm tra nội dung",
+    permissions: {
+      GET_LIST_SUBJECT_HISTORY: 0,
+      GET_SUBJECT_HISTORY: 0,
+      DELETE_GROUP: 0,
+      DELETE_GROUP_PERMISSION: 0,
+      UPDATE_LECTURE_CONTENT: 0,
+      GET_LECTURE_CONTENT: 1,
+      GET_LECTURE_CONTENT_BY_ID: 1,
+      DELETE_LECTURE_CONTENT: 1,
+      CREATE_LECTURE_CONTENT: 1,
+      GET_LIST_LECTURE_CONTENT: 1,
+      UPLOAD_VIDEO: 1,
+      UPLOAD_FILE: 1,
+      CREATE_ACCOUNT_BOOK: 1,
+      DELETE_ACCOUNT_BOOK: 1,
+      GET_ACCOUNT_BOOK: 1,
+      GET_LIST_ACCOUNT_BOOK: 1,
+      SYNC_BOOK_PERMISSION: 1,
+      DELETE_BOOK_PERMISSION: 1,
+      GET_BOOK_PERMISSION: 1,
+      GET_LIST_BOOK_PERMISSION: 1,
+      LIST_ACCOUNT_GROUP: 1,
+      GET_ACCOUNT_GROUP: 1,
+      DELETE_ACCOUNT_GROUP: 1,
+      LIST_CATEGORY: 1,
+      GET_CATEGORY: 1,
+      UPDATE_CATEGORY: 1,
+      CREATE_CATEGORY: 1,
+      DELETE_CATEGORY: 1,
+      GET_LECTURE_BY_SUBJECT: 1,
+      GET_LIST_LECTURE: 1,
+      UPDATE_LECTURE: 1,
+      CREATE_LECTURE: 1,
+      DELETE_LECTURE: 1,
+      UPDATE_SORT_LECTURE: 1,
+      DELETE_PUBLISHER: 1,
+      GET_PUBLISHER: 1,
+      CREATE_PUBLISHER: 1,
+      GET_LIST_PUBLISHER: 1,
+      DELETE_READER: 1,
+      GET_READER: 1,
+      CREATE_READER: 1,
+      GET_LIST_READER: 1,
+      UPDATE_READER: 1,
+      CREATE_SETTING: 1,
+      GET_SETTING: 1,
+      GET_LIST_SETTING: 1,
+      UPDATE_SETTING: 1,
+      CREATE_PERMISSION: 1,
+      LIST_PERMISSION: 1,
+      UPDATE_GROUP_PERMISSION: 1,
+      GET_GROUP_PERMISSION: 1,
+      CREATE_GROUP_PERMISSION: 1,
+      GET_LIST_GROUP_PERMISSION: 1,
+      UPDATE_ADMIN_ACCOUNT: 1,
+      CREATE_ADMIN_ACCOUNT: 0,
+      DELETE_ACCOUNT: 0,
+      GET_ACCOUNT: 1,
+      GET_LIST_ACCOUNT: 1,
+    },
+  },
+  {
+    id: "User",
+    name: "ROLE USER",
+    mo_ta: "Quyền người dùng, có thể truy cập nội dung cơ bản",
+    permissions: {
+      GET_LIST_SUBJECT_HISTORY: 1,
+      GET_SUBJECT_HISTORY: 0,
+      DELETE_GROUP: 0,
+      DELETE_GROUP_PERMISSION: 0,
+      UPDATE_LECTURE_CONTENT: 0,
+      GET_LECTURE_CONTENT: 1,
+      GET_LECTURE_CONTENT_BY_ID: 1,
+      DELETE_LECTURE_CONTENT: 1,
+      CREATE_LECTURE_CONTENT: 1,
+      GET_LIST_LECTURE_CONTENT: 1,
+      UPLOAD_VIDEO: 1,
+      UPLOAD_FILE: 1,
+      CREATE_ACCOUNT_BOOK: 1,
+      DELETE_ACCOUNT_BOOK: 1,
+      GET_ACCOUNT_BOOK: 1,
+      GET_LIST_ACCOUNT_BOOK: 1,
+      SYNC_BOOK_PERMISSION: 1,
+      DELETE_BOOK_PERMISSION: 1,
+      GET_BOOK_PERMISSION: 1,
+      GET_LIST_BOOK_PERMISSION: 1,
+      LIST_ACCOUNT_GROUP: 1,
+      GET_ACCOUNT_GROUP: 1,
+      DELETE_ACCOUNT_GROUP: 1,
+      LIST_CATEGORY: 1,
+      GET_CATEGORY: 1,
+      UPDATE_CATEGORY: 1,
+      CREATE_CATEGORY: 1,
+      DELETE_CATEGORY: 1,
+      GET_LECTURE_BY_SUBJECT: 1,
+      GET_LIST_LECTURE: 1,
+      UPDATE_LECTURE: 1,
+      CREATE_LECTURE: 1,
+      DELETE_LECTURE: 1,
+      UPDATE_SORT_LECTURE: 1,
+      DELETE_PUBLISHER: 1,
+      GET_PUBLISHER: 1,
+      CREATE_PUBLISHER: 1,
+      GET_LIST_PUBLISHER: 1,
+      DELETE_READER: 1,
+      GET_READER: 1,
+      CREATE_READER: 1,
+      GET_LIST_READER: 1,
+      UPDATE_READER: 1,
+      CREATE_SETTING: 1,
+      GET_SETTING: 1,
+      GET_LIST_SETTING: 1,
+      UPDATE_SETTING: 1,
+      CREATE_PERMISSION: 1,
+      LIST_PERMISSION: 1,
+      UPDATE_GROUP_PERMISSION: 1,
+      GET_GROUP_PERMISSION: 1,
+      CREATE_GROUP_PERMISSION: 1,
+      GET_LIST_GROUP_PERMISSION: 1,
+      UPDATE_ADMIN_ACCOUNT: 1,
+      CREATE_ADMIN_ACCOUNT: 0,
+      DELETE_ACCOUNT: 0,
+      GET_ACCOUNT: 1,
+      GET_LIST_ACCOUNT: 1,
+    },
+  },
 ];
+
 // Hàm sắp xếp người dùng theo fullName
 function sortUsers(usersArray) {
   // Clone mảng để không mutate dữ liệu gốc
@@ -52,7 +245,7 @@ function sortUsers(usersArray) {
 // Lấy users theo phân trang và hỗ trợ tìm kiếm
 app.get('/api/users/paging', (req, res) => {
   const page = parseInt(req.query.page) || 1;
-  const pageSize = parseInt(req.query.pageSize) || 5;
+  const pageSize = parseInt(req.query.pageSize) || 10;
   const nameSearch = (req.query.name || '').toLowerCase();
   const phoneSearch = (req.query.phone || '').toLowerCase();
 
@@ -173,34 +366,87 @@ app.delete('/api/users/:id', (req, res) => {
 
 // ================= ROLES ===================
 
+// ================= ROLES ===================
+
+// Lấy tất cả roles
 app.get('/api/roles', (req, res) => {
-  res.json({ data: roles });
+  res.json({
+    data: roles,
+    offset: 0,
+    limit: roles.length,
+    total: roles.length
+  });
 });
 
+app.get('/api/roles/page', (req, res) => {
+  const { page = 1, pageSize = 10, nameRole } = req.query;
+
+  // 1️⃣ Lọc danh sách roles theo nameRole (nếu có)
+  let filteredRoles = roles;
+  if (nameRole) {
+    filteredRoles = filteredRoles.filter(r => r.name.toLowerCase().includes(nameRole.toLowerCase()));
+  }
+
+  // 2️⃣ Sắp xếp danh sách roles
+  filteredRoles.sort((a, b) => a.name.localeCompare(b.name));
+
+  // 3️⃣ Tính chỉ số phân trang
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+
+  // 4️⃣ Lấy danh sách phân trang
+  const pagedRoles = filteredRoles.slice(startIndex, endIndex);
+
+  res.json({
+    data: pagedRoles,
+    page: page,
+    pageSize: pageSize,
+    total: filteredRoles.length,
+    totalPages: Math.ceil(filteredRoles.length / pageSize)
+  });
+});
+
+// Lấy 1 role theo id
 app.get('/api/roles/:id', (req, res) => {
   const role = roles.find(r => r.id === req.params.id);
   if (!role) return res.status(404).json({ error: 'Role not found' });
   res.json(role);
 });
 
+// Tạo mới role với permissions mặc định 0
 app.post('/api/roles', (req, res) => {
-  const { id, name } = req.body;
+  const { id, name, mo_ta } = req.body;
   if (roles.find(r => r.id === id)) {
     return res.status(400).json({ error: 'Role already exists' });
   }
-  const newRole = { id, name };
+
+  // Tạo permissions mặc định = 0 dựa trên các key của role "Admin"
+  const defaultPermissions = {};
+  Object.keys(roles[0].permissions).forEach(key => defaultPermissions[key] = 0);
+
+  const newRole = { id, name, mo_ta, permissions: defaultPermissions };
   roles.push(newRole);
   res.status(201).json(newRole);
 });
 
+// Cập nhật role (có thể sửa name, mo_ta, permissions)
 app.put('/api/roles/:id', (req, res) => {
   const role = roles.find(r => r.id === req.params.id);
   if (!role) return res.status(404).json({ error: 'Role not found' });
 
-  role.name = req.body.name ?? role.name;
+  const { name, mo_ta, permissions } = req.body;
+  role.name = name ?? role.name;
+  role.mo_ta = mo_ta ?? role.mo_ta;
+
+  // Nếu gửi permissions thì cập nhật
+  if (permissions) {
+    role.permissions = { ...role.permissions, ...permissions };
+  }
+
   res.json(role);
 });
 
+// Xóa role
 app.delete('/api/roles/:id', (req, res) => {
   const index = roles.findIndex(r => r.id === req.params.id);
   if (index === -1) return res.status(404).json({ error: 'Role not found' });
@@ -208,7 +454,7 @@ app.delete('/api/roles/:id', (req, res) => {
   const deletedRole = roles.splice(index, 1);
   res.json(deletedRole[0]);
 });
-// phân trang
+
 
 // Khởi động server
 app.listen(PORT, () => {
