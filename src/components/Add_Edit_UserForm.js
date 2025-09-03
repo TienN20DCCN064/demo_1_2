@@ -67,8 +67,6 @@ class AddUserForm extends Component {
                 ref={this.formRef}
                 layout="vertical"
                 style={{
-                    maxWidth: 600,
-                    marginTop: 50,  // xê xuống 50px
                     fontSize: '12px', // giảm chữ
                 }}
                 initialValues={this.props.initialValues}
@@ -181,7 +179,7 @@ class AddUserForm extends Component {
                     </Col>
                 </Row>
 
-                <Form.Item>
+                <Form.Item style={{ textAlign: "right" }}>
                     <Space>
                         <Button onClick={this.handleCancel}>Hủy</Button>
                         <Button

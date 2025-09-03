@@ -1,0 +1,9 @@
+/* Áp dụng cho toàn bộ body */
+body, #root {
+    font-weight: 400; /* hoặc 700 để đậm hơn */
+}
+
+/* Nếu muốn tất cả các component AntD mặc định cũng đậm */
+.ant-typography {
+    font-weight: 400;
+}

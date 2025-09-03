@@ -237,17 +237,25 @@ class RoleEdit extends Component {
         const { permissions, loading } = this.state;
 
         return (
-            <div style={{ padding: 24, background: "#f5f7fa", minHeight: "100vh" }}>
+            <div style={{ background: "#ebeef4ff", minHeight: "100vh", marginTop: "12px" }}>
                 <Card
-                    // title="Tên / Sửa Quyền"
-                    style={{ width: "50%", border: "none", boxShadow: "none", marginLeft: 0, }}
+                    style={{
+                        width: "80%",      // chiếm 80% container
+                        maxWidth: 800,     // giới hạn tối đa
+                        minWidth: 300,     // giới hạn tối thiểu
+                        border: "none",
+                        boxShadow: "none",
+                        marginLeft: 0      // sát lề trái
+                    }}
                     bodyStyle={{ padding: 0 }}
                 >
+
+
                     <Form
                         ref={this.formRef}
                         layout="vertical"
                         onFinish={this.handleSubmit}
-                        style={{ width: "100%", padding: "0 24px" }}
+                        style={{ width: "100%", padding: "25px 20px"}}
                     >
                         <Row gutter={16}>
                             <Col span={12}>
@@ -265,44 +273,51 @@ class RoleEdit extends Component {
                                     label="Mô tả"
                                     rules={[{ required: true }]}
                                 >
-                                    <Input.TextArea placeholder="Nhập mô tả" />
+                                    <Input.TextArea placeholder="Nhập mô tả" rows={4} />
                                 </Form.Item>
                             </Col>
                         </Row>
 
-                       <Form.Item name="permissions">
+
+<Form.Item name="permissions" label="Quyền">
   <Checkbox.Group style={{ width: "100%" }}>
     {permissions.map((group) => (
       <div
         key={group.label}
         style={{
-            width: "100%",   
-          marginBottom: 24,
-          border: "1px solid #d9d9d9",
-          borderRadius: 4,
-          padding: 12,
+          width: "100%", // Chiếm toàn bộ chiều ngang của container cha
+          marginBottom: 30, // Khoảng cách phía dưới 24px so với phần tử tiếp theo
+          border: "1px solid #d9d9d9", // Viền xung quanh div màu xám nhạt
+          borderRadius: 4, // Bo góc 4px cho div
+          padding: "4px 0", // Chỉ giữ padding trên-dưới, loại bỏ padding trái-phải
         }}
       >
         <strong
           style={{
-            display: "block",
-            marginBottom: 8,
-            borderBottom: "1px solid #d9d9d9",
-            paddingBottom: 4,
+            display: "block", // Hiển thị như block
+            width: "100%", // Đảm bảo chiếm toàn bộ chiều rộng
+            marginBottom: 3, // Khoảng cách phía dưới 8px
+            borderBottom: "1px solid #d9d9d9", // Gạch chân bằng border dưới
+            paddingBottom: 6, // Khoảng cách giữa nội dung chữ và border dưới
+            paddingLeft: 10, // Đặt lại padding trái để nội dung chữ không sát lề
+            paddingRight: 10, // Đặt lại padding phải để nội dung chữ không sát lề
+            boxSizing: "border-box", // Đảm bảo padding không làm tăng kích thước
           }}
         >
-          {group.label}
+          {group.label} {/* Hiển thị tên nhóm checkbox */}
         </strong>
+
         <div
           style={{
-            display: "grid",
-            gridTemplateColumns: "repeat(3, 1fr)", // luôn 3 cột
-            gap: "8px 16px", // khoảng cách giữa hàng và cột
+            display: "grid", // Sử dụng Grid layout
+            gridTemplateColumns: "repeat(3, 1fr)", // Chia thành 3 cột bằng nhau
+            gap: "16px 16px", // Sửa: tăng khoảng cách trên-dưới giữa các hàng checkbox lên 16px, giữ khoảng cách cột 16px
+           padding: "10px 10px 23px", // Sửa: tăng padding dưới lên 16px để tăng khoảng cách phía dưới 
           }}
         >
           {group.options.map((opt) => (
             <Checkbox key={opt.value} value={opt.value}>
-              {opt.label}
+              {opt.label} {/* Nhãn hiển thị của từng checkbox */}
             </Checkbox>
           ))}
         </div>
@@ -314,23 +329,22 @@ class RoleEdit extends Component {
 
 
 
+                    <Row justify="end" gutter={8} style={{ marginTop: 16 }}>
+                        <Col>
+                            <Button danger onClick={() => this.handleClickHuy()}>
+                                Hủy
+                            </Button>
+                        </Col>
+                        <Col>
+                            <Button type="primary" htmlType="submit" loading={loading}>
+                                Lưu
+                            </Button>
+                        </Col>
+                    </Row>
 
-                        <Row justify="end" gutter={8} style={{ marginTop: 16 }}>
-                            <Col>
-                                <Button danger onClick={() => this.handleClickHuy()}>
-                                    Hủy
-                                </Button>
-                            </Col>
-                            <Col>
-                                <Button type="primary" htmlType="submit" loading={loading}>
-                                    Lưu
-                                </Button>
-                            </Col>
-                        </Row>
-
-                    </Form>
-                </Card>
-            </div>
+                </Form>
+            </Card>
+            </div >
         );
     }
 }

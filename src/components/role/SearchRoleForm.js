@@ -42,11 +42,9 @@ class UserSearchBar extends Component {
     return (
       <div
         style={{
-          background: "#fff",
-          padding: "16px",
-          marginBottom: "16px",
-          borderRadius: "8px",
-          boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+          background: "#fff", // nền trắng
+          marginBottom: "16px", // khoảng cách dưới
+          marginTop: "16px",
         }}
       >
         <Space style={{ width: "100%" }} size="middle">

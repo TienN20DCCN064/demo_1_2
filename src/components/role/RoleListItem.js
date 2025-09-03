@@ -66,6 +66,7 @@ const RoleListItem = ({
             align: "right",  // 👈 luôn căn phải
             render: (_, record) => (
                 <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end" }}>
+
                     <Button
                         size="small"
                         type="dashed"
@@ -99,7 +100,8 @@ const RoleListItem = ({
 
 
     return (
-        <Table
+        <><div style={{ marginTop: '80px' }}></div><Table
+
             rowKey="id"
             columns={columns}
             dataSource={data}
@@ -115,8 +117,7 @@ const RoleListItem = ({
                     return originalElement;
                 },
             }}
-            onChange={handleTableChange}
-        />
+            onChange={handleTableChange} /></>
     );
 };
 

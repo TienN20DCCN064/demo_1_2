@@ -23,7 +23,7 @@ import 'antd/dist/reset.css'; // nếu dùng AntD v5
 import * as api from '../api/users';
 // import { Alert } from 'reactstrap';
 import { Alert, Modal, Layout, Breadcrumb, Button, message, Spin } from "antd"; // thêm message
-
+import './App.css';
 import Sidebar from "./Sidebar";
 import HeaderUserInfo from "./HeaderUserInfo";
 
@@ -344,65 +344,79 @@ class App extends Component {
                             </Breadcrumb.Item>
                         </Breadcrumb>
 
-                        <SearchUserForm
-                            onSearch={this.handleSearch}
-                            onReset={this.handleResetSearch}
-                            initialName={filterName}
-                            initialPhone={filterPhone}
-                        />
-                        <Button
-                            type="primary"
-                            icon={<PlusOutlined />}
+                        <div
                             style={{
-                                marginBottom: '16px',
-                                float: 'right',      // đưa sang bên phải
-                                marginRight: '10px'  // cách lề phải 10px
-                            }}
-                            onClick={() => {
-                                // Lấy lại các param filter hiện tại
-                                const params = new URLSearchParams(window.location.search);
-                                // Xóa id nếu có (chỉ giữ filter)
-                                params.delete("id");
-                                const queryString = params.toString();
-                                window.history.pushState({}, "", "/user-add" + (queryString ? "?" + queryString : ""));
-                                this.forceUpdate();
+                                background: "#fff",     // nền trắng
+                                marginTop: "12px",
+                                padding: "16px",        // khoảng cách bên trong
+                                borderRadius: "8px",    // bo góc
+                                boxShadow: "0 2px 8px rgba(0,0,0,0.1)", // đổ bóng nhẹ
+                                height: "100%",  // chiếm hết chiều cao cha
                             }}
                         >
-                            Thêm người dùng
-                        </Button>
-
-
-                        <div style={{ marginTop: '100px' }}></div>
-                        {!!this.props.users.error && (
-                            <Alert
-                                message={this.props.users.error}
-                                type="error"
-                                showIcon
-                                closable
-                                onClose={this.handleCloseAlert}
-                                style={{ marginBottom: '16px' }}
+                            <SearchUserForm
+                                onSearch={this.handleSearch}
+                                onReset={this.handleResetSearch}
+                                initialName={filterName}
+                                initialPhone={filterPhone}
                             />
-                        )}
+                            <Button
+                                type="primary"
+                                icon={<PlusOutlined />}
+                                style={{
+                                    marginBottom: '16px',
+                                    float: 'right',      // đưa sang bên phải
+                                    marginRight: '10px'  // cách lề phải 10px
+                                }}
+                                onClick={() => {
+                                    // Lấy lại các param filter hiện tại
+                                    const params = new URLSearchParams(window.location.search);
+                                    // Xóa id nếu có (chỉ giữ filter)
+                                    params.delete("id");
+                                    const queryString = params.toString();
+                                    window.history.pushState({}, "", "/user-add" + (queryString ? "?" + queryString : ""));
+                                    this.forceUpdate();
+                                }}
+                            >
+                                Thêm mới
+                            </Button>
 
-                        {!!usersToRender.length && (
-                            <UserList
-                                onDeleteUserClick={this.handleDeleteUserSubmit}
-                                onEditUserClick={this.onClickEditUser}
-                                users={usersToRender}
-                                currentPage={this.props.users.page}   // <-- cái này từ redux
-                                onPageChange={this.handlePageChange}
-                                pageSize={this.props.users.pageSize}
-                                total={this.props.users.total}
-                                totalPages={this.props.users.totalPages}
-                            />
 
-                        )}
+                            <div style={{ marginTop: '84px' }}></div>
+                            {!!this.props.users.error && (
+                                <Alert
+                                    message={this.props.users.error}
+                                    type="error"
+                                    showIcon
+                                    closable
+                                    onClose={this.handleCloseAlert}
+                                    style={{ marginBottom: '16px' }}
+                                />
+                            )}
+
+                            {!!usersToRender.length && (
+                                <UserList
+                                    onDeleteUserClick={this.handleDeleteUserSubmit}
+                                    onEditUserClick={this.onClickEditUser}
+                                    users={usersToRender}
+                                    currentPage={this.props.users.page}   // <-- cái này từ redux
+                                    onPageChange={this.handlePageChange}
+                                    pageSize={this.props.users.pageSize}
+                                    total={this.props.users.total}
+                                    totalPages={this.props.users.totalPages}
+                                />
+
+                            )}
+
+                        </div>
+
                     </>
                 );
 
             case "/user-add":
                 return (
                     <>
+
                         <Breadcrumb>
                             <Breadcrumb.Item>
                                 <span style={{ color: "#1890ff" }}>Trang chủ</span>
@@ -415,10 +429,27 @@ class App extends Component {
                             </Breadcrumb.Item>
                         </Breadcrumb>
 
-                        <AddEditUserForm
-                            onAdd_or_UpdateUser={this.handleCreateUserSubmit} // 👈 sửa lại prop này
-                            onCancel={this.handleCancelUserForm}
-                        />
+                        <div
+                            style={{
+                                maxWidth: 600,
+
+                                background: "#fff",     // nền trắng
+                                marginTop: "12px",
+                                padding: "16px",        // khoảng cách bên trong
+                                borderRadius: "8px",    // bo góc
+                                boxShadow: "0 2px 8px rgba(0,0,0,0.1)", // đổ bóng nhẹ
+                                // height: "100%",  // chiếm hết chiều cao cha
+                                // width: "100%"
+                            }}
+
+                        >
+
+                            <AddEditUserForm
+                                onAdd_or_UpdateUser={this.handleCreateUserSubmit} // 👈 sửa lại prop này
+                                onCancel={this.handleCancelUserForm}
+                            />
+                        </div>
+
 
                     </>
                 );
@@ -438,11 +469,27 @@ class App extends Component {
                             </Breadcrumb.Item>
                         </Breadcrumb>
 
-                        <AddEditUserForm
-                            onAdd_or_UpdateUser={this.handleEditUserSubmit}
-                            initialValues={this.state.editingUser}
-                            onCancel={this.handleCancelUserForm}
-                        />
+                        <div
+                            style={{
+                                maxWidth: 600,
+
+                                background: "#fff",     // nền trắng
+                                marginTop: "12px",
+                                padding: "16px",        // khoảng cách bên trong
+                                borderRadius: "8px",    // bo góc
+                                boxShadow: "0 2px 8px rgba(0,0,0,0.1)", // đổ bóng nhẹ
+                                // height: "100%",  // chiếm hết chiều cao cha
+                                // width: "100%"
+                            }}
+
+                        >
+                            <AddEditUserForm
+                                onAdd_or_UpdateUser={this.handleEditUserSubmit}
+                                initialValues={this.state.editingUser}
+                                onCancel={this.handleCancelUserForm}
+                            />
+                        </div>
+
 
                     </>
                 );
@@ -460,6 +507,7 @@ class App extends Component {
 
                 return (
                     <>
+
                         <Breadcrumb>
                             <Breadcrumb.Item>
                                 <span style={{ color: "#1890ff" }}>Trang chủ</span>
@@ -469,45 +517,58 @@ class App extends Component {
                             </Breadcrumb.Item>
                         </Breadcrumb>
 
-                        <SearchRoleForm
-                            onSearch={this.handleSearchRoleName}
-                            onReset={this.handleResetSearchRoleName}
-                            initialRoleName={filterRoleName}
 
-                        />
-                        <Button
-                            type="primary"
-                            icon={<PlusOutlined />}
+                        <div
                             style={{
-                                marginBottom: '16px',
-                                float: 'right',      // đưa sang bên phải
-                                marginRight: '10px'  // cách lề phải 10px
-                            }}
-                            onClick={() => {
-                                // Lấy lại các param filter hiện tại
-                                const params = new URLSearchParams(window.location.search);
-                                // Xóa id nếu có (chỉ giữ filter)
-                                params.delete("id");
-                                const queryString = params.toString();
-                                window.history.pushState({}, "", "/role-add" + (queryString ? "?" + queryString : ""));
-                                this.forceUpdate();
+                                background: "#fff",     // nền trắng
+                                marginTop: "12px",
+                                padding: "16px",        // khoảng cách bên trong
+                                borderRadius: "8px",    // bo góc
+                                boxShadow: "0 2px 8px rgba(0,0,0,0.1)", // đổ bóng nhẹ
+                                height: "100%",  // chiếm hết chiều cao cha
                             }}
                         >
-                            Thêm mới
-                        </Button>
 
 
-                        <div style={{ marginTop: '100px' }}></div>
-                        <RoleList
-                            roles={this.props.roles.items || []}
-                            onDeleteRoleClick={this.handleDeleteRoleSubmit}
-                            onEditRoleClick={this.onClickEditRole}
-                            currentPage={this.props.roles.page}
-                            onPageChange={() => { }}
-                            pageSize={10}
-                            total={0}
-                            totalPages={1}
-                        />
+                            <SearchRoleForm
+                                onSearch={this.handleSearchRoleName}
+                                onReset={this.handleResetSearchRoleName}
+                                initialRoleName={filterRoleName}
+
+                            />
+                            <Button
+                                type="primary"
+                                icon={<PlusOutlined />}
+                                style={{
+                                    marginBottom: '16px',
+                                    float: 'right',      // đưa sang bên phải
+                                    marginRight: '10px'  // cách lề phải 10px
+                                }}
+                                onClick={() => {
+                                    // Lấy lại các param filter hiện tại
+                                    const params = new URLSearchParams(window.location.search);
+                                    // Xóa id nếu có (chỉ giữ filter)
+                                    params.delete("id");
+                                    const queryString = params.toString();
+                                    window.history.pushState({}, "", "/role-add" + (queryString ? "?" + queryString : ""));
+                                    this.forceUpdate();
+                                }}
+                            >
+                                Thêm mới
+                            </Button>
+
+                            <RoleList
+                                roles={this.props.roles.items || []}
+                                onDeleteRoleClick={this.handleDeleteRoleSubmit}
+                                onEditRoleClick={this.onClickEditRole}
+                                currentPage={this.props.roles.page}
+                                onPageChange={() => { }}
+                                pageSize={10}
+                                total={0}
+                                totalPages={1}
+                            />
+                        </div>
+
                     </>
                 );
 
@@ -581,11 +642,11 @@ class App extends Component {
         return (
             <>
                 {/* <Layout style={{ minHeight: "100vh", background: "#f0f2f5" }}>  👈 xám nhạt */}
-                <Layout style={{ minHeight: "100vh", background: "#000" }}>  {/* 👈 đen */}
+                <Layout style={{ background: "#ebeef4ff" }}>
                     <Sidebar />
-                    <Layout style={{ padding: "16px" }}>
+                    <Layout >
                         <HeaderUserInfo />
-                        <Content style={{ background: "#fff", padding: 24, minHeight: 280 }}>
+                        <Content style={{ background: "#ebeef4ff", padding: 10, minHeight: 280 }}>
 
                             {this.renderContent()}
                         </Content>
