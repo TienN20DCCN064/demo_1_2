@@ -23,7 +23,7 @@ function handleCheckPageParam() {
 const UserListItem = ({ data, onDeleteClick, onEditClick, currentPage, onPageChange, pageSize, total, totalPages }) => {
   handleCheckPageParam();
   console.log("data in UserListItem:", data);
-  
+
   const handleTableChange = (pagination) => {
     // Cập nhật URL khi đổi trang hoặc pageSize
     const query = new URLSearchParams(window.location.search);
@@ -38,6 +38,7 @@ const UserListItem = ({ data, onDeleteClick, onEditClick, currentPage, onPageCha
   };
 
   const stringToHslColor = (str = "") => {
+
     let hash = 0;
     for (let i = 0; i < str.length; i++) {
       hash = str.charCodeAt(i) + ((hash << 5) - hash);
@@ -51,8 +52,8 @@ const UserListItem = ({ data, onDeleteClick, onEditClick, currentPage, onPageCha
   {
     title: "#",
     key: "image",
-    align: "center", // luôn căn giữa
-    width: 50,
+    align: "center",
+   width: 80, // 👈 luôn cố định 60px
     render: (_, record) => (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
         {record.image ? (
@@ -89,63 +90,61 @@ const UserListItem = ({ data, onDeleteClick, onEditClick, currentPage, onPageCha
     title: "Họ Và Tên",
     dataIndex: "fullName",
     key: "fullName",
-    width: 500,
-    align: "left", // luôn căn trái
-    render: (_, record) => <div>{record.fullName}</div>,
+    align: "left",
+    width: "20%",
+    ellipsis: true,
   },
   {
     title: "Tên Người Dùng",
     dataIndex: "userName",
     key: "userName",
-    width: 200,
-    align: "left", // luôn căn trái
-    render: (_, record) => <div>{record.userName}</div>,
+    align: "left",
+    width: "15%",
+    ellipsis: true,
   },
   {
     title: "Email",
     dataIndex: "email",
     key: "email",
-    width: 200,
-    align: "left", // luôn căn trái
-    render: (_, record) => <div>{record.email}</div>,
+    align: "left",
+    width: "20%",
+    ellipsis: true,
   },
   {
     title: "Số điện thoại",
     dataIndex: "phone",
     key: "phone",
-    width: 200,
-    align: "center", // căn giữa
-    render: (_, record) => <div>{record.phone}</div>,
+    align: "center",
+    width: "15%",
+    ellipsis: true,
   },
   {
     title: "Quyền",
     dataIndex: "roleId",
     key: "role",
-    width: 200,
-    align: "center", // căn giữa
-    render: (_, record) => <div>{record.roleId}</div>,
+    align: "center",
+    width: "10%",
+    ellipsis: true,
   },
   {
     title: "Hoạt Động",
     key: "action",
-    width: 200,
-    align: "right", // luôn căn phải
+    align: "right",
+    width: "15%",
     render: (_, record) => (
       <div style={{ display: "flex", gap: "8px", justifyContent: "flex-end", paddingRight: "10px" }}>
         <Button
           size="small"
           type="dashed"
           icon={<EditOutlined />}
-          onClick={() => {
-            onEditClick({ userId: record.id });
-          }}
+          onClick={() => onEditClick({ userId: record.id })}
         />
         <Button
           size="small"
           danger
           type="primary"
           icon={<DeleteOutlined />}
-          onClick={() => {
+          onClick={() =>
             Modal.confirm({
               title: "Bạn có muốn xóa không?",
               okText: "Yes",
@@ -154,13 +153,15 @@ const UserListItem = ({ data, onDeleteClick, onEditClick, currentPage, onPageCha
               onOk() {
                 onDeleteClick(record.id);
               },
-            });
-          }}
+            })
+          }
         />
       </div>
     ),
   },
 ];
+
+
 
   return (
     <Table
@@ -180,6 +181,8 @@ const UserListItem = ({ data, onDeleteClick, onEditClick, currentPage, onPageCha
         },
       }}
       onChange={handleTableChange}
+      style={{ width: "100%" }}     // fit cha
+      tableLayout="fixed"           // 👈 ép chia đều theo % width
     />
   );
 

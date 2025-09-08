@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { Input, Button, Space } from "antd";
+import { Input, Button, Space, Row, Col } from "antd";
 import { SearchOutlined, DeleteOutlined } from "@ant-design/icons";
 
 class UserSearchBar extends Component {
@@ -54,35 +54,42 @@ class UserSearchBar extends Component {
           marginTop: "16px",
         }}
       >
-        <Space style={{ width: "100%" }} size="middle">
-          <Input
-            placeholder="Họ và tên"
-            style={{ width: 200 }}
-            value={name}
-            onChange={(e) => this.handleInputChange(e, "name")}
-          />
-          <Input
-            placeholder="Số điện thoại"
-            style={{ width: 200 }}
-            value={phone}
-            onChange={(e) => this.handleInputChange(e, "phone")}
-          />
-          <Button
-            type="primary"
-            icon={<SearchOutlined />}
-            onClick={this.handleSearch}
-          >
-            Tìm kiếm
-          </Button>
+        <Row gutter={[16, 16]} style={{ marginTop: 16, marginBottom: 16 }}>
+          <Col xs={24} sm={12} md={6}>
+            <Input
+              placeholder="Họ và tên"
+              value={name}
+              onChange={(e) => this.handleInputChange(e, "name")}
+            />
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Input
+              placeholder="Số điện thoại"
+              value={phone}
+              onChange={(e) => this.handleInputChange(e, "phone")}
+            />
+          </Col>
+          <Col xs={24} sm={12} md={6}>
+            <Space style={{ width: "100%" }}>
+              <Button
+                type="primary"
+                icon={<SearchOutlined />}
+                onClick={this.handleSearch}
+              >
+                Tìm kiếm
+              </Button>
+              <Button
+                danger
+                icon={<DeleteOutlined />}
+                onClick={this.handleReset}
+              >
+                Xóa
+              </Button>
+            </Space>
+          </Col>
 
-          <Button
-            danger
-            icon={<DeleteOutlined />}
-            onClick={this.handleReset}
-          >
-            Xóa
-          </Button>
-        </Space>
+        </Row>
+
       </div>
     );
   }

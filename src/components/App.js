@@ -20,10 +20,12 @@ import {
 } from '../actions/role';
 
 import 'antd/dist/reset.css'; // nếu dùng AntD v5
+import './App.css'; // import CSS chung
+
 import * as api from '../api/users';
 // import { Alert } from 'reactstrap';
 import { Alert, Modal, Layout, Breadcrumb, Button, message, Spin } from "antd"; // thêm message
-import './App.css';
+
 import Sidebar from "./Sidebar";
 import HeaderUserInfo from "./HeaderUserInfo";
 
@@ -334,25 +336,26 @@ class App extends Component {
                 console.log("usersToRender:", usersToRender);
                 this.handleCheck_dataNull_goOtherPage(usersToRender);
                 return (
-                    <>
+                    <div style={{
+                        background: "#fff",     // nền trắng
+                        marginTop: "12px",
+                        padding: "16px",        // khoảng cách bên trong
+                        borderRadius: "8px",    // bo góc
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.1)", // đổ bóng nhẹ
+                        height: "100%",  // chiếm hết chiều cao cha
+                        width: "100%"
+                    }}  >
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff" }}>Trang chủ</span>
+                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Trang chủ</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#000" }}>Người dùng</span>
+                                <span style={{ color: "#000", fontSize: "13px", }}>Người dùng</span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
 
                         <div
-                            style={{
-                                background: "#fff",     // nền trắng
-                                marginTop: "12px",
-                                padding: "16px",        // khoảng cách bên trong
-                                borderRadius: "8px",    // bo góc
-                                boxShadow: "0 2px 8px rgba(0,0,0,0.1)", // đổ bóng nhẹ
-                                height: "100%",  // chiếm hết chiều cao cha
-                            }}
+
                         >
                             <SearchUserForm
                                 onSearch={this.handleSearch}
@@ -410,7 +413,7 @@ class App extends Component {
 
                         </div>
 
-                    </>
+                    </div>
                 );
 
             case "/user-add":
@@ -419,28 +422,18 @@ class App extends Component {
 
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff" }}>Trang chủ</span>
+                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Trang chủ</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff" }}>Người Dùng</span>
+                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Người Dùng</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#000" }}>Thêm người dùng</span>
+                                <span style={{ color: "#000", fontSize: "13px", }}>Thêm người dùng</span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
 
                         <div
-                            style={{
-                                maxWidth: 600,
-
-                                background: "#fff",     // nền trắng
-                                marginTop: "12px",
-                                padding: "16px",        // khoảng cách bên trong
-                                borderRadius: "8px",    // bo góc
-                                boxShadow: "0 2px 8px rgba(0,0,0,0.1)", // đổ bóng nhẹ
-                                // height: "100%",  // chiếm hết chiều cao cha
-                                // width: "100%"
-                            }}
+                         
 
                         >
 
@@ -459,28 +452,18 @@ class App extends Component {
                     <>
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff" }}>Trang chủ</span>
+                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Trang chủ</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff" }}>Người Dùng</span>
+                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Người Dùng</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#000" }}>Sửa người dùng</span>
+                                <span style={{ color: "#000", fontSize: "13px", }}>Sửa người dùng</span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
 
                         <div
-                            style={{
-                                maxWidth: 600,
-
-                                background: "#fff",     // nền trắng
-                                marginTop: "12px",
-                                padding: "16px",        // khoảng cách bên trong
-                                borderRadius: "8px",    // bo góc
-                                boxShadow: "0 2px 8px rgba(0,0,0,0.1)", // đổ bóng nhẹ
-                                // height: "100%",  // chiếm hết chiều cao cha
-                                // width: "100%"
-                            }}
+                          
 
                         >
                             <AddEditUserForm
@@ -510,10 +493,10 @@ class App extends Component {
 
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff" }}>Trang chủ</span>
+                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Trang chủ</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#000" }}>Quyền Hạn</span>
+                                <span style={{ color: "#000", fontSize: "13px", }}>Quyền Hạn</span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
 
@@ -577,13 +560,13 @@ class App extends Component {
                     <>
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff" }}>Trang chủ</span>
+                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Trang chủ</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff" }}>Quyền Hạn</span>
+                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Quyền Hạn</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#000" }}>Thêm Quyền</span>
+                                <span style={{ color: "#000", fontSize: "13px", }}>Thêm Quyền</span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
                         <AddEditRoleForm go_page_role={this.go_page_role} />
@@ -596,13 +579,13 @@ class App extends Component {
                     <>
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff" }}>Trang chủ</span>
+                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Trang chủ</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff" }}>Quyền Hạn</span>
+                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Quyền Hạn</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#000" }}>Sửa Quyền</span>
+                                <span style={{ color: "#000", fontSize: "13px", }}>Sửa Quyền</span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
                         <AddEditRoleForm go_page_role={this.go_page_role} />

@@ -1,9 +1,45 @@
-/* Áp dụng cho toàn bộ body */
-body, #root {
-    font-weight: 400; /* hoặc 700 để đậm hơn */
+.ant-form-item-label > label {
+  font-size: 13px !important;
+  font-weight: 620;
 }
 
-/* Nếu muốn tất cả các component AntD mặc định cũng đậm */
-.ant-typography {
-    font-weight: 400;
+.ant-checkbox + span {
+  font-size: 13px !important;
+  font-weight: 450 !important;
+}
+
+.ant-input {
+  font-size: 13px !important;
+}
+
+.ant-btn {
+  font-size: 13px !important;
+}
+
+.role-group-label {
+  display: inline-block;
+  font-size: 13px;
+  font-weight: 600;
+
+  margin-bottom: 4px;
+  color: #333;
+}
+
+/* Giảm cỡ chữ trong toàn bộ dữ liệu của bảng */
+.ant-table-cell {
+  font-size: 13px !important;
+  padding: 8px 13px !important; /* tùy chỉnh khoảng cách trong cell */
+}
+
+/* Giảm cỡ chữ tiêu đề cột */
+.ant-table-thead > tr > th {
+  font-size: 13px !important;
+  font-weight: 600;
+  background: #fafafa; /* giữ màu nhẹ cho header */
+}
+
+@media (max-width: 800px) {
+  .ant-layout-sider {
+    display: none !important;
+  }
 }

@@ -1,0 +1,64 @@
+/* RoleEdit.css */
+
+.role-edit-container {
+  background: #ebeef4ff;
+  min-height: 100vh;
+  margin-top: 12px;
+}
+
+.role-edit-card {
+  width: 100%;
+  max-width: 1024px;
+  margin-left: 0;
+  border: none;
+  box-shadow: none;
+}
+
+.role-edit-form {
+  width: 100%;
+  padding: 25px 20px;
+}
+
+.role-edit-group {
+  width: 100%;
+  margin-bottom: 30px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  padding: 4px 0;
+}
+
+.role-edit-group-title {
+  display: block;
+  width: 100%;
+  margin-bottom: 3px;
+  border-bottom: 1px solid #d9d9d9;
+  padding: 6px 10px;
+  box-sizing: border-box;
+  font-weight: bold;
+}
+
+.role-edit-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  padding: 10px 10px 23px;
+  box-sizing: border-box;
+}
+
+.role-edit-checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.role-edit-checkbox span {
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* tối đa 2 dòng */
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  line-height: 1.4;
+  word-break: break-word;
+  max-width: 100%;
+  box-sizing: border-box;
+}

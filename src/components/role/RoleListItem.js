@@ -60,7 +60,7 @@ const RoleListItem = ({
         }
         ,
         {
-            title: "Hoạt động",
+            title: "Hành Động",
             key: "action",
             width: 200,
             align: "right",  // 👈 luôn căn phải
