@@ -20,6 +20,7 @@ const HeaderUserInfo = () => {
         justifyContent: "flex-end",
         alignItems: "center",
         boxShadow: "0 1px 4px rgba(0,0,0,0.1)",
+        // width: 1024;
       }}
     >
       <Dropdown menu={{ items: menuItems }}>

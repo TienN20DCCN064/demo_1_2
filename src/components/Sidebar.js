@@ -1,6 +1,6 @@
 import React from "react";
 import { Layout, Menu } from "antd";
-import './App.css';
+import '../style/App.css';
 
 import {
   UserOutlined,
@@ -28,6 +28,12 @@ const Sidebar = () => {
       case "role":
         window.location.href = "/role";
         break;
+      case "add_question":
+        window.location.href = "/add_question";
+        break;
+      case "list_question":
+        window.location.href = "/list_question";
+        break;
       default:
         window.location.href = "/";
     }
@@ -41,11 +47,14 @@ const Sidebar = () => {
   else if (currentPath.startsWith("/courses")) selectedKey = "course-management";
   else if (currentPath.startsWith("/system")) selectedKey = "system";
   else if (currentPath.startsWith("/role")) selectedKey = "role";
+  else if (currentPath.startsWith("/add_question")) selectedKey = "add_question";
+  else if (currentPath.startsWith("/list_question")) selectedKey = "list_question";
 
   // xác định menu cha mở theo selectedKey
   let openKey = "user-management"; // mặc định
   if (selectedKey === "role") openKey = "system";
   else if (selectedKey === "users" || selectedKey === "user-groups") openKey = "user-management";
+  else if (selectedKey === "add_question" || selectedKey === "list_question") openKey = "question";
   else openKey = "";
 
   return (
@@ -113,6 +122,22 @@ const Sidebar = () => {
                 key: "role",
                 label: "Quyền Hạn",
               },
+            ],
+          },
+          {
+            key: "question",
+            icon: <SettingOutlined />,
+            label: "Câu hỏi",
+            children: [
+              {
+                key: "list_question",
+                label: "Danh sách câu hỏi",
+              },
+              {
+                key: "add_question",
+                label: "Thêm câu hỏi",
+              },
+
             ],
           },
         ]}

@@ -1,8 +1,9 @@
 import React, { Component } from "react";
+import "../../style/RoleEdit.css";   // ✅ import CSS riêng
+
 import { Form, Input, Checkbox, Button, Card, Row, Col } from "antd";
 import * as api from "../../api/role";
 import { message } from "antd";
-import "./RoleEdit.css";   // ✅ import CSS riêng
 
 class RoleEdit extends Component {
     formRef = React.createRef();
@@ -235,142 +236,221 @@ class RoleEdit extends Component {
     };
 
 
-//    render() {
-//         const { permissions, loading } = this.state;
-
-//         return (
-//             <div style={{ background: "#ebeef4ff", minHeight: "100vh", marginTop: "12px" }}>
-//                 <Card
-//                     style={{
-//                         width: "100%",          // luôn chiếm 100%
-//                         maxWidth: 1024,         // không vượt quá 1024px
-//                         marginLeft: 0,
-//                         border: "none",
-//                         boxShadow: "none",
-
-//                         marginLeft: 0      // sát lề trái
-//                     }}
-//                     bodyStyle={{ padding: 0 }}
-//                 >
 
 
-//                     <Form
-//                         ref={this.formRef}
-//                         layout="vertical"
-//                         onFinish={this.handleSubmit}
-//                         style={{ width: "100%", padding: "25px 20px" }}
-//                     >
-//                         <Row gutter={16}>
-//                             <Col span={12}>
-//                                 <Form.Item
-//                                     name="name"
-//                                     label="Tên"
-//                                     rules={[{ required: true }]}
-//                                 >
-//                                     <Input placeholder="ROLE_ADMIN" />
-//                                 </Form.Item>
-//                             </Col>
-//                             <Col span={12}>
-//                                 <Form.Item
-//                                     name="description"
-//                                     label="Mô tả"
-//                                     rules={[{ required: true }]}
-//                                 >
-//                                     <Input.TextArea placeholder="Nhập mô tả" rows={4} />
-//                                 </Form.Item>
-//                             </Col>
-//                         </Row>
+    render() {
+        const { permissions, loading } = this.state;
 
+        return (
+            <div className="page-container">
+                <Card
+                    className="card-container"
+                    bodyStyle={{ padding: 0 }}
+                >
+                    <Form
+                        ref={this.formRef}
+                        layout="vertical"
+                        onFinish={this.handleSubmit}
+                        className="form-container"
+                    >
+                        <Row gutter={16}>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="name"
+                                    label="Tên"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input placeholder="ROLE_ADMIN" />
+                                </Form.Item>
+                            </Col>
+                            <Col span={12}>
+                                <Form.Item
+                                    name="description"
+                                    label="Mô tả"
+                                    rules={[{ required: true }]}
+                                >
+                                    <Input.TextArea placeholder="Nhập mô tả" rows={4} />
+                                </Form.Item>
+                            </Col>
+                        </Row>
 
-//                         <Form.Item name="permissions" label="Quyền">
-//                             <Checkbox.Group style={{ width: "100%" }}>
-//                                 {permissions.map((group) => (
-//                                     <div
-//                                         key={group.label}
-//                                         style={{
-//                                             width: "100%", // Chiếm toàn bộ chiều ngang của container cha
-//                                             marginBottom: 30, // Khoảng cách phía dưới 24px so với phần tử tiếp theo
-//                                             border: "1px solid #d9d9d9", // Viền xung quanh div màu xám nhạt
-//                                             borderRadius: 4, // Bo góc 4px cho div
-//                                             padding: "4px 0", // Chỉ giữ padding trên-dưới, loại bỏ padding trái-phải
-//                                         }}
-//                                     >
-//                                         <strong
-//                                             style={{
-//                                                 display: "block", // Hiển thị như block
-//                                                 width: "100%", // Đảm bảo chiếm toàn bộ chiều rộng
-//                                                 marginBottom: 3, // Khoảng cách phía dưới 8px
-//                                                 borderBottom: "1px solid #d9d9d9", // Gạch chân bằng border dưới
-//                                                 paddingBottom: 6, // Khoảng cách giữa nội dung chữ và border dưới
-//                                                 paddingLeft: 10, // Đặt lại padding trái để nội dung chữ không sát lề
-//                                                 paddingRight: 10, // Đặt lại padding phải để nội dung chữ không sát lề
-//                                                 boxSizing: "border-box", // Đảm bảo padding không làm tăng kích thước
-//                                             }}
-//                                         >
-//                                             {group.label} {/* Hiển thị tên nhóm checkbox */}
-//                                         </strong>
+                        <Form.Item name="permissions" label="Quyền">
+                            <Checkbox.Group className="checkbox-group">
+                                {permissions.map((group) => (
+                                    <div
+                                        key={group.label}
+                                        className="permission-group"
+                                    >
+                                        <strong className="group-label">
+                                            {group.label}
+                                        </strong>
 
-//                                         <div
-//                                             style={{
-//                                                 display: "grid",
-//                                                 gridTemplateColumns: "repeat(3, 1fr)", // ✅ luôn 3 cột
-//                                                 gap: "16px",
-//                                                 padding: "10px 10px 23px",
-//                                                 boxSizing: "border-box"
-//                                             }}
-//                                         >
-//                                             {group.options.map((opt) => (
-//                                                 <Checkbox
-//                                                     key={opt.value}
-//                                                     value={opt.value}
-//                                                     style={{ display: "flex", alignItems: "center" }}
-//                                                 >
-//                                                     <span
-//                                                         style={{
-//                                                             display: "-webkit-box",
-//                                                             WebkitLineClamp: 2,             // tối đa 2 dòng
-//                                                             WebkitBoxOrient: "vertical",
-//                                                             overflow: "hidden",
-//                                                             textOverflow: "ellipsis",       // nếu thừa thì "..."
-//                                                             whiteSpace: "normal",
-//                                                             lineHeight: "1.4",
-//                                                             wordBreak: "break-word",        // xuống dòng khi gặp từ dài
-//                                                             maxWidth: "100%",               // ✅ không cho vượt container cha
-//                                                             boxSizing: "border-box",
-//                                                         }}
-//                                                     >
-//                                                         {opt.label}
-//                                                     </span>
+                                        <div className="options-grid">
+                                            {group.options.map((opt) => (
+                                                <Checkbox
+                                                    key={opt.value}
+                                                    value={opt.value}
+                                                    className="checkbox-item"
+                                                >
+                                                    <span className="checkbox-label"
+                                                        style={{
+                                                            WebkitBoxOrient: "vertical",
+                                                        }}
+                                                    >
+                                                        {opt.label}
+                                                    </span>
+                                                </Checkbox>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))}
+                            </Checkbox.Group>
+                        </Form.Item>
 
-//                                                 </Checkbox>
-//                                             ))}
-//                                         </div>
-//                                     </div>
-//                                 ))}
-//                             </Checkbox.Group>
-//                         </Form.Item>
+                        <Row justify="end" gutter={8} className="button-row">
+                            <Col>
+                                <Button danger onClick={() => this.handleClickHuy()}>
+                                    Hủy
+                                </Button>
+                            </Col>
+                            <Col>
+                                <Button type="primary" htmlType="submit" loading={loading}>
+                                    Lưu
+                                </Button>
+                            </Col>
+                        </Row>
+                    </Form>
+                </Card>
+            </div>
+        );
+    }
 
+    // render() {
+    //     const { permissions, loading } = this.state;
 
+    //     return (
+    //         <div style={{ background: "#ebeef4ff", minHeight: "100vh", marginTop: "12px" }}>
+    //             <Card
+    //                 style={{
+    //                     width: "100%",
+    //                     maxWidth: 1024,
+    //                     marginLeft: 0,
+    //                     border: "none",
+    //                     boxShadow: "none"
+    //                 }}
+    //                 bodyStyle={{ padding: 0 }}
+    //             >
+    //                 <Form
+    //                     ref={this.formRef}
+    //                     layout="vertical"
+    //                     onFinish={this.handleSubmit}
+    //                     style={{ width: "100%", padding: "25px 20px" }}
+    //                 >
+    //                     <Row gutter={16}>
+    //                         <Col span={12}>
+    //                             <Form.Item
+    //                                 name="name"
+    //                                 label="Tên"
+    //                                 rules={[{ required: true }]}
+    //                             >
+    //                                 <Input placeholder="ROLE_ADMIN" />
+    //                             </Form.Item>
+    //                         </Col>
+    //                         <Col span={12}>
+    //                             <Form.Item
+    //                                 name="description"
+    //                                 label="Mô tả"
+    //                                 rules={[{ required: true }]}
+    //                             >
+    //                                 <Input.TextArea placeholder="Nhập mô tả" rows={4} />
+    //                             </Form.Item>
+    //                         </Col>
+    //                     </Row>
 
+    //                     <Form.Item name="permissions" label="Quyền">
+    //                         <Checkbox.Group style={{ width: "100%" }}>
+    //                             {permissions.map((group) => (
+    //                                 <div
+    //                                     key={group.label}
+    //                                     style={{
+    //                                         width: "100%",
+    //                                         marginBottom: 30,
+    //                                         border: "1px solid #d9d9d9",
+    //                                         borderRadius: 4,
+    //                                         padding: "4px 0"
+    //                                     }}
+    //                                 >
+    //                                     <strong
+    //                                         style={{
+    //                                             display: "block",
+    //                                             width: "100%",
+    //                                             marginBottom: 3,
+    //                                             borderBottom: "1px solid #d9d9d9",
+    //                                             paddingBottom: 6,
+    //                                             paddingLeft: 10,
+    //                                             paddingRight: 10,
+    //                                             boxSizing: "border-box"
+    //                                         }}
+    //                                     >
+    //                                         {group.label}
+    //                                     </strong>
 
-//                         <Row justify="end" gutter={8} style={{ marginTop: 16 }}>
-//                             <Col>
-//                                 <Button danger onClick={() => this.handleClickHuy()}>
-//                                     Hủy
-//                                 </Button>
-//                             </Col>
-//                             <Col>
-//                                 <Button type="primary" htmlType="submit" loading={loading}>
-//                                     Lưu
-//                                 </Button>
-//                             </Col>
-//                         </Row>
+    //                                     <div
+    //                                         style={{
+    //                                             display: "grid",
+    //                                             gridTemplateColumns: "repeat(3, 1fr)",
+    //                                             gap: "16px",
+    //                                             padding: "10px 10px 23px",
+    //                                             boxSizing: "border-box"
+    //                                         }}
+    //                                     >
+    //                                         {group.options.map((opt) => (
+    //                                             <Checkbox
+    //                                                 key={opt.value}
+    //                                                 value={opt.value}
+    //                                                 style={{ display: "flex", alignItems: "center" }}
+    //                                             >
+    //                                                 <span
+    //                                                     style={{
+    //                                                         display: "-webkit-box",
+    //                                                         WebkitLineClamp: 2,
+    //                                                         WebkitBoxOrient: "vertical",
+    //                                                         overflow: "hidden",
+    //                                                         textOverflow: "ellipsis",
+    //                                                         whiteSpace: "normal",
+    //                                                         lineHeight: "1.4",
+    //                                                         wordBreak: "break-word",
+    //                                                         maxWidth: "100%",
+    //                                                         boxSizing: "border-box"
+    //                                                     }}
+    //                                                 >
+    //                                                     {opt.label}
+    //                                                 </span>
+    //                                             </Checkbox>
+    //                                         ))}
+    //                                     </div>
+    //                                 </div>
+    //                             ))}
+    //                         </Checkbox.Group>
+    //                     </Form.Item>
 
-//                     </Form>
-//                 </Card>
-//             </div >
-//         );
-//     } 
+    //                     <Row justify="end" gutter={8} style={{ marginTop: 16 }}>
+    //                         <Col>
+    //                             <Button danger onClick={() => this.handleClickHuy()}>
+    //                                 Hủy
+    //                             </Button>
+    //                         </Col>
+    //                         <Col>
+    //                             <Button type="primary" htmlType="submit" loading={loading}>
+    //                                 Lưu
+    //                             </Button>
+    //                         </Col>
+    //                     </Row>
+    //                 </Form>
+    //             </Card>
+    //         </div>
+    //     );
+    // }
 
 }
 

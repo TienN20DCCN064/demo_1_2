@@ -1,13 +1,14 @@
 import React, { Component } from 'react';
-import NewUserForm from './NewUserForm';
-import UserList from './UserList';
+
+
+
+import SearchUserForm from "./user/SearchUserForm";
+import AddEditUserForm from './user/Add_Edit_UserForm';
+import NewUserForm from './user/NewUserForm';
+import UserList from './user/UserList';
+
 import RoleList from './role/RoleList';
-
-import SearchUserForm from "./SearchUserForm";
-import AddEditUserForm from './Add_Edit_UserForm';
 import AddEditRoleForm from './role/Add_Edit_RoleForm';
-
-
 import SearchRoleForm from './role/SearchRoleForm';
 
 
@@ -20,7 +21,7 @@ import {
 } from '../actions/role';
 
 import 'antd/dist/reset.css'; // nếu dùng AntD v5
-import './App.css'; // import CSS chung
+import '../style/App.css'; // import CSS chung
 
 import * as api from '../api/users';
 // import { Alert } from 'reactstrap';
@@ -336,107 +337,96 @@ class App extends Component {
                 console.log("usersToRender:", usersToRender);
                 this.handleCheck_dataNull_goOtherPage(usersToRender);
                 return (
-                    <div style={{
-                        background: "#fff",     // nền trắng
-                        marginTop: "12px",
-                        padding: "16px",        // khoảng cách bên trong
-                        borderRadius: "8px",    // bo góc
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.1)", // đổ bóng nhẹ
-                        height: "100%",  // chiếm hết chiều cao cha
-                        width: "100%"
-                    }}  >
+                    <>
+
+
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Trang chủ</span>
+                                <span className="breadcrumb-link">Trang chủ</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#000", fontSize: "13px", }}>Người dùng</span>
+                                <span className="breadcrumb-text">Người dùng</span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
 
-                        <div
+                        <div className="custom-card">
 
-                        >
-                            <SearchUserForm
-                                onSearch={this.handleSearch}
-                                onReset={this.handleResetSearch}
-                                initialName={filterName}
-                                initialPhone={filterPhone}
-                            />
-                            <Button
-                                type="primary"
-                                icon={<PlusOutlined />}
-                                style={{
-                                    marginBottom: '16px',
-                                    float: 'right',      // đưa sang bên phải
-                                    marginRight: '10px'  // cách lề phải 10px
-                                }}
-                                onClick={() => {
-                                    // Lấy lại các param filter hiện tại
-                                    const params = new URLSearchParams(window.location.search);
-                                    // Xóa id nếu có (chỉ giữ filter)
-                                    params.delete("id");
-                                    const queryString = params.toString();
-                                    window.history.pushState({}, "", "/user-add" + (queryString ? "?" + queryString : ""));
-                                    this.forceUpdate();
-                                }}
+
+                            <div
+
                             >
-                                Thêm mới
-                            </Button>
-
-
-                            <div style={{ marginTop: '84px' }}></div>
-                            {!!this.props.users.error && (
-                                <Alert
-                                    message={this.props.users.error}
-                                    type="error"
-                                    showIcon
-                                    closable
-                                    onClose={this.handleCloseAlert}
-                                    style={{ marginBottom: '16px' }}
+                                <SearchUserForm
+                                    onSearch={this.handleSearch}
+                                    onReset={this.handleResetSearch}
+                                    initialName={filterName}
+                                    initialPhone={filterPhone}
                                 />
-                            )}
+                                <Button
+                                    type="primary"
+                                    icon={<PlusOutlined />}
+                                    className="btn-add"
+                                    onClick={() => {
+                                        // Lấy lại các param filter hiện tại
+                                        const params = new URLSearchParams(window.location.search);
+                                        // Xóa id nếu có (chỉ giữ filter)
+                                        params.delete("id");
+                                        const queryString = params.toString();
+                                        window.history.pushState({}, "", "/user-add" + (queryString ? "?" + queryString : ""));
+                                        this.forceUpdate();
+                                    }}
+                                >
+                                    Thêm mới
+                                </Button>
 
-                            {!!usersToRender.length && (
-                                <UserList
-                                    onDeleteUserClick={this.handleDeleteUserSubmit}
-                                    onEditUserClick={this.onClickEditUser}
-                                    users={usersToRender}
-                                    currentPage={this.props.users.page}   // <-- cái này từ redux
-                                    onPageChange={this.handlePageChange}
-                                    pageSize={this.props.users.pageSize}
-                                    total={this.props.users.total}
-                                    totalPages={this.props.users.totalPages}
-                                />
 
-                            )}
+                                <div style={{ marginTop: '84px' }}></div>
+                                {!!this.props.users.error && (
+                                    <Alert
+                                        message={this.props.users.error}
+                                        type="error"
+                                        showIcon
+                                        closable
+                                        onClose={this.handleCloseAlert}
+                                        style={{ marginBottom: '16px' }}
+                                    />
+                                )}
+
+                                {!!usersToRender.length && (
+                                    <UserList
+                                        onDeleteUserClick={this.handleDeleteUserSubmit}
+                                        onEditUserClick={this.onClickEditUser}
+                                        users={usersToRender}
+                                        currentPage={this.props.users.page}   // <-- cái này từ redux
+                                        onPageChange={this.handlePageChange}
+                                        pageSize={this.props.users.pageSize}
+                                        total={this.props.users.total}
+                                        totalPages={this.props.users.totalPages}
+                                    />
+
+                                )}
+
+                            </div>
 
                         </div>
-
-                    </div>
+                    </>
                 );
 
             case "/user-add":
                 return (
                     <>
-
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Trang chủ</span>
+                                <span className="breadcrumb-link">Trang chủ</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Người Dùng</span>
+                                <span className="breadcrumb-link">Người Dùng</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#000", fontSize: "13px", }}>Thêm người dùng</span>
+                                <span className="breadcrumb-text">Thêm người dùng</span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
 
-                        <div
-                         
-
-                        >
-
+                        <div className="custom-card-small-1">
                             <AddEditUserForm
                                 onAdd_or_UpdateUser={this.handleCreateUserSubmit} // 👈 sửa lại prop này
                                 onCancel={this.handleCancelUserForm}
@@ -452,20 +442,18 @@ class App extends Component {
                     <>
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Trang chủ</span>
+                                <span className="breadcrumb-link">Trang chủ</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Người Dùng</span>
+                                <span className="breadcrumb-link">Người Dùng</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#000", fontSize: "13px", }}>Sửa người dùng</span>
+                                <span className="breadcrumb-text">Sửa người dùng</span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
 
-                        <div
-                          
 
-                        >
+                        <div className="custom-card-small-1">
                             <AddEditUserForm
                                 onAdd_or_UpdateUser={this.handleEditUserSubmit}
                                 initialValues={this.state.editingUser}
@@ -491,26 +479,22 @@ class App extends Component {
                 return (
                     <>
 
+
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Trang chủ</span>
+                                <span className="breadcrumb-link">Trang chủ</span>
                             </Breadcrumb.Item>
+
                             <Breadcrumb.Item>
-                                <span style={{ color: "#000", fontSize: "13px", }}>Quyền Hạn</span>
+                                <span className="breadcrumb-text">Quyền Hạn</span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
 
 
-                        <div
-                            style={{
-                                background: "#fff",     // nền trắng
-                                marginTop: "12px",
-                                padding: "16px",        // khoảng cách bên trong
-                                borderRadius: "8px",    // bo góc
-                                boxShadow: "0 2px 8px rgba(0,0,0,0.1)", // đổ bóng nhẹ
-                                height: "100%",  // chiếm hết chiều cao cha
-                            }}
-                        >
+
+
+                        <div className="custom-card">
+
 
 
                             <SearchRoleForm
@@ -522,11 +506,7 @@ class App extends Component {
                             <Button
                                 type="primary"
                                 icon={<PlusOutlined />}
-                                style={{
-                                    marginBottom: '16px',
-                                    float: 'right',      // đưa sang bên phải
-                                    marginRight: '10px'  // cách lề phải 10px
-                                }}
+                                className="btn-add"
                                 onClick={() => {
                                     // Lấy lại các param filter hiện tại
                                     const params = new URLSearchParams(window.location.search);
@@ -558,17 +538,21 @@ class App extends Component {
             case "/role-add":
                 return (
                     <>
+
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Trang chủ</span>
+                                <span className="breadcrumb-link">Trang chủ</span>
+                            </Breadcrumb.Item>
+
+                            <Breadcrumb.Item>
+                                <span className="breadcrumb-link">Quyền Hạn</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Quyền Hạn</span>
-                            </Breadcrumb.Item>
-                            <Breadcrumb.Item>
-                                <span style={{ color: "#000", fontSize: "13px", }}>Thêm Quyền</span>
+                                <span className="breadcrumb-text">Thêm Quyền</span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
+
+
                         <AddEditRoleForm go_page_role={this.go_page_role} />
 
                     </>
@@ -577,15 +561,17 @@ class App extends Component {
             case "/role-edit":
                 return (
                     <>
+
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Trang chủ</span>
+                                <span className="breadcrumb-link">Trang chủ</span>
+                            </Breadcrumb.Item>
+
+                            <Breadcrumb.Item>
+                                <span className="breadcrumb-link">Quyền Hạn</span>
                             </Breadcrumb.Item>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff", fontSize: "13px", }}>Quyền Hạn</span>
-                            </Breadcrumb.Item>
-                            <Breadcrumb.Item>
-                                <span style={{ color: "#000", fontSize: "13px", }}>Sửa Quyền</span>
+                                <span className="breadcrumb-text">Sửa Quyền</span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
                         <AddEditRoleForm go_page_role={this.go_page_role} />
@@ -601,12 +587,15 @@ class App extends Component {
             default:
                 return (
                     <>
+
                         <Breadcrumb>
                             <Breadcrumb.Item>
-                                <span style={{ color: "#1890ff" }}>Trang chủ</span>
+                                <span className="breadcrumb-link">Trang chủ</span>
                             </Breadcrumb.Item>
+
+
                             <Breadcrumb.Item>
-                                <span style={{ color: "#000" }}>Người dùng</span>
+                                <span className="breadcrumb-text">Thêm </span>
                             </Breadcrumb.Item>
                         </Breadcrumb>
 
@@ -625,11 +614,11 @@ class App extends Component {
         return (
             <>
                 {/* <Layout style={{ minHeight: "100vh", background: "#f0f2f5" }}>  👈 xám nhạt */}
-                <Layout style={{ background: "#ebeef4ff" }}>
+                <Layout className="app-layout">
                     <Sidebar />
-                    <Layout >
+            <Layout className="app-container">
                         <HeaderUserInfo />
-                        <Content style={{ background: "#ebeef4ff", padding: 10, minHeight: 280 }}>
+                        <Content className="app-content">
 
                             {this.renderContent()}
                         </Content>

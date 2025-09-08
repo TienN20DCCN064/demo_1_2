@@ -221,6 +221,72 @@ let roles = [
     },
   },
 ];
+let questionGroups = [
+  {
+    id: 1,
+    name: "Nhóm kiến thức lập trình",
+    data: [
+      {
+        type: "Multiple",
+        item: "Chọn các ngôn ngữ lập trình phía frontend",
+        answers: [
+          { text: "HTML", isCorrect: true },
+          { text: "CSS", isCorrect: true },
+          { text: "Python", isCorrect: false },
+          { text: "JavaScript", isCorrect: true }
+        ]
+      },
+      {
+        type: "Single",
+        item: "Ngôn ngữ nào được sử dụng để lập trình Android?",
+        answers: [
+          { text: "Java", isCorrect: true },
+          { text: "Python", isCorrect: false },
+          { text: "C#", isCorrect: false },
+          { text: "Ruby", isCorrect: false }
+        ]
+      },
+      {
+        type: "Multiple",
+        item: "Chọn các hệ điều hành mã nguồn mở",
+        answers: [
+          { text: "Linux", isCorrect: true },
+          { text: "Windows", isCorrect: false },
+          { text: "Ubuntu", isCorrect: true },
+          { text: "macOS", isCorrect: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: 2,
+    name: "Nhóm kiến thức cơ sở dữ liệu",
+    data: [
+      {
+        type: "Single",
+        item: "Database nào là quan hệ?",
+        answers: [
+          { text: "MySQL", isCorrect: true },
+          { text: "MongoDB", isCorrect: false },
+          { text: "Redis", isCorrect: false },
+          { text: "Cassandra", isCorrect: false }
+        ]
+      },
+      {
+        type: "Multiple",
+        item: "Chọn các loại database NoSQL",
+        answers: [
+          { text: "MongoDB", isCorrect: true },
+          { text: "Redis", isCorrect: true },
+          { text: "MySQL", isCorrect: false },
+          { text: "PostgreSQL", isCorrect: false }
+        ]
+      }
+    ]
+  }
+];
+
+
 
 // Hàm sắp xếp người dùng theo fullName
 function sortUsers(usersArray) {
@@ -454,6 +520,120 @@ app.delete('/api/roles/:id', (req, res) => {
   const deletedRole = roles.splice(index, 1);
   res.json(deletedRole[0]);
 });
+
+// ================= QUESTION GROUPS ===================
+
+// Lấy toàn bộ nhóm câu hỏi
+app.get('/api/questionGroups', (req, res) => {
+  res.json({
+    data: questionGroups,
+    offset: 0,  
+    limit: questionGroups.length,
+    total: questionGroups.length
+  });
+});
+
+// Lấy 1 nhóm câu hỏi theo id
+app.get('/api/questionGroups/:id', (req, res) => {
+  const group = questionGroups.find(q => q.id === parseInt(req.params.id));
+  if (!group) return res.status(404).json({ error: 'Question group not found' });
+  res.json(group);
+});
+
+// Tạo mới nhóm câu hỏi
+app.post('/api/questionGroups', (req, res) => {
+  const { name, data } = req.body;
+  if (!name || !data || !Array.isArray(data)) {
+    return res.status(400).json({ error: 'Missing required fields or invalid data' });
+  }
+
+  const newGroup = {
+    id: questionGroups.length ? Math.max(...questionGroups.map(q => q.id)) + 1 : 1,
+    name,
+    data
+  };
+
+  questionGroups.push(newGroup);
+  res.status(201).json(newGroup);
+});
+
+// Cập nhật nhóm câu hỏi
+app.put('/api/questionGroups/:id', (req, res) => {
+  const group = questionGroups.find(q => q.id === parseInt(req.params.id));
+  if (!group) return res.status(404).json({ error: 'Question group not found' });
+
+  const { name, data } = req.body;
+  if (name !== undefined) group.name = name;
+  if (data !== undefined && Array.isArray(data)) group.data = data;
+
+  res.json(group);
+});
+
+// Xóa nhóm câu hỏi
+app.delete('/api/questionGroups/:id', (req, res) => {
+  const index = questionGroups.findIndex(q => q.id === parseInt(req.params.id));
+  if (index === -1) return res.status(404).json({ error: 'Question group not found' });
+
+  const deletedGroup = questionGroups.splice(index, 1);
+  res.json(deletedGroup[0]);
+});
+
+// ================= QUESTION ITEMS ===================
+
+// Thêm câu hỏi vào nhóm
+app.post('/api/questionGroups/:groupId/items', (req, res) => {
+  const group = questionGroups.find(q => q.id === parseInt(req.params.groupId));
+  if (!group) return res.status(404).json({ error: 'Question group not found' });
+
+  const { type, item, answers } = req.body;
+  if (!type || !item || !Array.isArray(answers)) {
+    return res.status(400).json({ error: 'Missing required fields or invalid answers' });
+  }
+
+  const newQuestion = { type, item, answers };
+  group.data.push(newQuestion);
+  res.status(201).json(newQuestion);
+});
+
+// Cập nhật câu hỏi trong nhóm
+app.put('/api/questionGroups/:groupId/items/:index', (req, res) => {
+  const group = questionGroups.find(q => q.id === parseInt(req.params.groupId));
+  if (!group) return res.status(404).json({ error: 'Question group not found' });
+
+  const index = parseInt(req.params.index);
+  if (index < 0 || index >= group.data.length) return res.status(404).json({ error: 'Question not found' });
+
+  const { type, item, answers } = req.body;
+  if (type) group.data[index].type = type;
+  if (item) group.data[index].item = item;
+  if (answers && Array.isArray(answers)) group.data[index].answers = answers;
+
+  res.json(group.data[index]);
+});
+
+// Xóa câu hỏi trong nhóm
+app.delete('/api/questionGroups/:groupId/items/:index', (req, res) => {
+  const group = questionGroups.find(q => q.id === parseInt(req.params.groupId));
+  if (!group) return res.status(404).json({ error: 'Question group not found' });
+
+  const index = parseInt(req.params.index);
+  if (index < 0 || index >= group.data.length) return res.status(404).json({ error: 'Question not found' });
+
+  const deleted = group.data.splice(index, 1);
+  res.json(deleted[0]);
+});
+
+// Lấy 1 câu hỏi trong nhóm
+app.get('/api/questionGroups/:groupId/items/:index', (req, res) => {
+  const group = questionGroups.find(q => q.id === parseInt(req.params.groupId));
+  if (!group) return res.status(404).json({ error: 'Question group not found' });
+
+  const index = parseInt(req.params.index);
+  if (index < 0 || index >= group.data.length) return res.status(404).json({ error: 'Question not found' });
+
+  res.json(group.data[index]);
+});
+
 
 
 // Khởi động server
