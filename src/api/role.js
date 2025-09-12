@@ -4,7 +4,9 @@ const API_BASE = '/roles';
 
 // Lấy tất cả roles
 export const getRoles = () => {
-    return axios.get(API_BASE);
+    const response = axios.get(API_BASE);
+    console.log('response', response);
+    return response;
 };
 
 // Lấy 1 role theo id

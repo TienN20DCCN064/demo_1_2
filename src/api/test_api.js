@@ -283,8 +283,245 @@ let questionGroups = [
         ]
       }
     ]
+  },
+  // 8 nhóm mới
+  {
+    id: 3,
+    name: "Nhóm kiến thức JavaScript",
+    data: [
+      {
+        type: "Single",
+        item: "Phương thức nào dùng để thêm phần tử vào cuối mảng?",
+        answers: [
+          { text: "push()", isCorrect: true },
+          { text: "pop()", isCorrect: false },
+          { text: "shift()", isCorrect: false },
+          { text: "unshift()", isCorrect: false }
+        ]
+      },
+      {
+        type: "Multiple",
+        item: "Chọn các kiểu dữ liệu nguyên thủy trong JS",
+        answers: [
+          { text: "String", isCorrect: true },
+          { text: "Number", isCorrect: true },
+          { text: "Object", isCorrect: false },
+          { text: "Boolean", isCorrect: true }
+        ]
+      }
+    ]
+  },
+  {
+    id: 4,
+    name: "Nhóm kiến thức HTML & CSS",
+    data: [
+      {
+        type: "Single",
+        item: "Thẻ HTML nào dùng để tạo tiêu đề lớn nhất?",
+        answers: [
+          { text: "<h1>", isCorrect: true },
+          { text: "<h6>", isCorrect: false },
+          { text: "<header>", isCorrect: false },
+          { text: "<title>", isCorrect: false }
+        ]
+      },
+      {
+        type: "Multiple",
+        item: "Chọn các thuộc tính CSS về màu sắc",
+        answers: [
+          { text: "color", isCorrect: true },
+          { text: "background-color", isCorrect: true },
+          { text: "font-size", isCorrect: false },
+          { text: "border", isCorrect: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: 5,
+    name: "Nhóm kiến thức mạng máy tính",
+    data: [
+      {
+        type: "Single",
+        item: "Giao thức nào dùng để truyền dữ liệu an toàn trên Internet?",
+        answers: [
+          { text: "HTTPS", isCorrect: true },
+          { text: "HTTP", isCorrect: false },
+          { text: "FTP", isCorrect: false },
+          { text: "TCP", isCorrect: false }
+        ]
+      },
+      {
+        type: "Multiple",
+        item: "Chọn các thiết bị mạng phổ biến",
+        answers: [
+          { text: "Router", isCorrect: true },
+          { text: "Switch", isCorrect: true },
+          { text: "Printer", isCorrect: false },
+          { text: "Hub", isCorrect: true }
+        ]
+      }
+    ]
+  },
+  {
+    id: 6,
+    name: "Nhóm kiến thức Python",
+    data: [
+      {
+        type: "Single",
+        item: "Hàm nào dùng để in ra màn hình trong Python?",
+        answers: [
+          { text: "print()", isCorrect: true },
+          { text: "echo()", isCorrect: false },
+          { text: "console.log()", isCorrect: false },
+          { text: "printf()", isCorrect: false }
+        ]
+      },
+      {
+        type: "Multiple",
+        item: "Chọn các kiểu dữ liệu trong Python",
+        answers: [
+          { text: "int", isCorrect: true },
+          { text: "str", isCorrect: true },
+          { text: "float", isCorrect: true },
+          { text: "char", isCorrect: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: 7,
+    name: "Nhóm kiến thức Linux",
+    data: [
+      {
+        type: "Single",
+        item: "Lệnh nào dùng để liệt kê các file trong thư mục hiện tại?",
+        answers: [
+          { text: "ls", isCorrect: true },
+          { text: "cd", isCorrect: false },
+          { text: "mkdir", isCorrect: false },
+          { text: "rm", isCorrect: false }
+        ]
+      },
+      {
+        type: "Multiple",
+        item: "Chọn các lệnh thao tác file trên Linux",
+        answers: [
+          { text: "cp", isCorrect: true },
+          { text: "mv", isCorrect: true },
+          { text: "rm", isCorrect: true },
+          { text: "echo", isCorrect: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: 8,
+    name: "Nhóm kiến thức Git",
+    data: [
+      {
+        type: "Single",
+        item: "Lệnh nào dùng để khởi tạo repository mới?",
+        answers: [
+          { text: "git init", isCorrect: true },
+          { text: "git clone", isCorrect: false },
+          { text: "git commit", isCorrect: false },
+          { text: "git push", isCorrect: false }
+        ]
+      },
+      {
+        type: "Multiple",
+        item: "Chọn các lệnh dùng để quản lý branch",
+        answers: [
+          { text: "git branch", isCorrect: true },
+          { text: "git checkout", isCorrect: true },
+          { text: "git merge", isCorrect: true },
+          { text: "git pull", isCorrect: false }
+        ]
+      }
+    ]
+  },
+  {
+    id: 9,
+    name: "Nhóm kiến thức React",
+    data: [
+      {
+        type: "Single",
+        item: "Hook nào dùng để quản lý state trong function component?",
+        answers: [
+          { text: "useState", isCorrect: true },
+          { text: "useEffect", isCorrect: false },
+          { text: "useReducer", isCorrect: false },
+          { text: "useContext", isCorrect: false }
+        ]
+      },
+      {
+        type: "Multiple",
+        item: "Chọn các thành phần của React",
+        answers: [
+          { text: "Component", isCorrect: true },
+          { text: "Props", isCorrect: true },
+          { text: "State", isCorrect: true },
+          { text: "Class", isCorrect: true }
+        ]
+      }
+    ]
+  },
+  {
+    id: 10,
+    name: "Nhóm kiến thức thuật toán",
+    data: [
+      {
+        type: "Single",
+        item: "Thuật toán sắp xếp nào nhanh nhất trung bình?",
+        answers: [
+          { text: "Quick Sort", isCorrect: true },
+          { text: "Bubble Sort", isCorrect: false },
+          { text: "Selection Sort", isCorrect: false },
+          { text: "Insertion Sort", isCorrect: false }
+        ]
+      },
+      {
+        type: "Multiple",
+        item: "Chọn các thuật toán tìm kiếm",
+        answers: [
+          { text: "Binary Search", isCorrect: true },
+          { text: "Linear Search", isCorrect: true },
+          { text: "Depth First Search", isCorrect: true },
+          { text: "Breadth First Search", isCorrect: true }
+        ]
+      }
+    ]
+  },
+  {
+    id: 11,
+    name: "Nhóm kiến thức AI & Machine Learning",
+    data: [
+      {
+        type: "Single",
+        item: "Thuật toán nào thường dùng để phân loại dữ liệu?   Thuật toán nào thường dùng để phân loại dữ liệu?Thuật toán nào thường dùng để phân loại dữ liệu?Thuật toán nào thường dùng để phân loại dữ liệu?Thuật toán nào thường dùng để phân loại dữ liệu?Thuật toán nào thường dùng để phân loại dữ liệu?Thuật toán nào thường dùng để phân loại dữ liệu?Thuật toán nào thường dùng để phân loại dữ liệu?Thuật toán nào thường dùng để phân loại dữ liệu?",
+        answers: [
+          { text: "Decision Tree", isCorrect: true },
+          { text: "K-Means", isCorrect: false },
+          { text: "PCA", isCorrect: false },
+          { text: "Gradient Descent", isCorrect: false }
+        ]
+      },
+      {
+        type: "Multiple",
+        item: "Chọn các loại học máy (Machine Learning)",
+        answers: [
+          { text: "Supervised Learning", isCorrect: true },
+          { text: "Unsupervised Learning", isCorrect: true },
+          { text: "Reinforcement Learning", isCorrect: true },
+          { text: "Deep Learning", isCorrect: true }
+        ]
+      }
+    ]
   }
+
 ];
+
 
 
 
@@ -523,13 +760,47 @@ app.delete('/api/roles/:id', (req, res) => {
 
 // ================= QUESTION GROUPS ===================
 
-// Lấy toàn bộ nhóm câu hỏi
-app.get('/api/questionGroups', (req, res) => {
+// // Lấy toàn bộ nhóm câu hỏi
+// app.get('/api/questionGroups', (req, res) => {
+//   res.json({
+//     data: questionGroups,
+//     offset: 0,  
+//     limit: questionGroups.length,
+//     total: questionGroups.length
+//   });
+// });
+// Lấy nhóm câu hỏi theo phân trang và hỗ trợ tìm kiếm
+app.get('/api/questionGroups/paging', (req, res) => {
+  const page = parseInt(req.query.page) || 1;
+  const pageSize = parseInt(req.query.pageSize) || 10;
+  const groupNameSearch = (req.query.groupName || '').toLowerCase();
+
+  // 1️⃣ Sắp xếp theo name
+  let sortedGroups = [...questionGroups].sort((a, b) => {
+    const nameA = (a.name || '').trim().toLowerCase();
+    const nameB = (b.name || '').trim().toLowerCase();
+    return nameA.localeCompare(nameB);
+  });
+
+  // 2️⃣ Lọc theo groupName nếu có
+  if (groupNameSearch) {
+    sortedGroups = sortedGroups.filter(g => (g.name || '').toLowerCase().includes(groupNameSearch));
+  }
+
+  // 3️⃣ Tính chỉ số phân trang
+  const startIndex = (page - 1) * pageSize;
+  const endIndex = startIndex + pageSize;
+
+  // 4️⃣ Lấy danh sách phân trang
+  const pagedGroups = sortedGroups.slice(startIndex, endIndex);
+
+  // 5️⃣ Trả về
   res.json({
-    data: questionGroups,
-    offset: 0,  
-    limit: questionGroups.length,
-    total: questionGroups.length
+    data: pagedGroups,
+    page: page,
+    pageSize: pageSize,
+    total: sortedGroups.length,
+    totalPages: Math.ceil(sortedGroups.length / pageSize)
   });
 });
 

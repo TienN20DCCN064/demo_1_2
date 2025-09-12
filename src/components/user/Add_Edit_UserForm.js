@@ -63,9 +63,9 @@ class AddUserForm extends Component {
 
         return (
             <Form
-                onFinish={this.handleAdd}
                 ref={this.formRef}
                 layout="vertical"
+                onFinish={this.handleAdd}
                 style={{
                     fontSize: '12px', // giảm chữ
                 }}

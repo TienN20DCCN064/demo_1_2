@@ -11,6 +11,9 @@ import RoleList from './role/RoleList';
 import AddEditRoleForm from './role/Add_Edit_RoleForm';
 import SearchRoleForm from './role/SearchRoleForm';
 
+import QuestionGroupList from './question/QuestionGroupList';
+import QuestionGroupSearchBar from './question/SearchQuestion';
+import AddEditQuestionGroup from './question/Add_Edit_Question_Group';
 
 import { connect } from 'react-redux';
 import {
@@ -19,6 +22,9 @@ import {
 import {
     getRolesRequest, getRolesSuccess, getRolesError, deleteRoleRequest, getRolesPageRequest
 } from '../actions/role';
+import {
+    getQuestionGroupsPageRequest, getQuestionGroupsPageSuccess, createQuestionGroupRequest, createQuestionGroupSuccess, updateQuestionGroupRequest, updateQuestionGroupSuccess, deleteQuestionGroupRequest, deleteQuestionGroupSuccess, questionGroupsError
+} from '../actions/questionGroups';
 
 import 'antd/dist/reset.css'; // nếu dùng AntD v5
 import '../style/App.css'; // import CSS chung
@@ -67,6 +73,7 @@ class App extends Component {
         const pageSize = parseInt(params.get("pageSize"), 10) || 10;
         const name = params.get("name") || "";
         const phone = params.get("phone") || "";
+        const groupName = params.get("groupName") || "";
 
         // Gọi action để lấy danh sách users
         await this.props.getUsersPageRequest({ page, pageSize, name, phone });
@@ -79,6 +86,9 @@ class App extends Component {
             this.setState({ editingUser });
         } else if (window.location.pathname === "/role") {
             await this.props.getRolesRequest();
+        }
+        else if (window.location.pathname === "/list_question") {
+            await this.props.getQuestionGroupsPageRequest({ page: 1, pageSize: 10, groupName });
         }
 
         this.setState({ loading: false });
@@ -256,17 +266,7 @@ class App extends Component {
         window.history.pushState({}, "", `/role-edit?${params.toString()}`);
         this.forceUpdate();
     };
-    // go_page_role = () => {
-    //     const params = new URLSearchParams(window.location.search);
-    //     console.log("params in go_page_role:", params.toString());
-    //     params.set("page", 1);
-    //     params.set("pageSize", 10);
-    //     window.history.pushState({}, "", `/role?${params.toString()}`);
 
-    //     // Gọi lại redux action lấy dữ liệu roles
-    //     this.props.getRolesRequest();
-    //     this.forceUpdate();
-    // };
     go_page_role = () => {
         const params = new URLSearchParams(window.location.search);
         console.log("params in go_page_role (before):", params.toString());
@@ -294,6 +294,33 @@ class App extends Component {
         // ❌ không nên forceUpdate trừ khi bất đắc dĩ
         this.forceUpdate();
     };
+    go_page_question_group = () => {
+        const params = new URLSearchParams(window.location.search);
+        console.log("params in go_page_question_group (before):", params.toString());
+
+        // 🔍 Đảm bảo luôn có page và pageSize mặc định
+        if (!params.has("page")) {
+            params.set("page", 1);
+        }
+        if (!params.has("pageSize")) {
+            params.set("pageSize", 10);
+        }
+
+        window.history.pushState({}, "", `/list_question?${params.toString()}`);
+        console.log("params in go_page_question_group (after):", params.toString());
+
+        // ✅ Lấy param ra và truyền hết vào Redux
+        const page = params.get("page") || 1;
+        const pageSize = params.get("pageSize") || 10;
+        const groupName = params.get("groupName") || "";
+        // ✅ nếu có groupName thì set xuống state để input hiển thị lại
+        this.setState({ searchGroupName: groupName });
+
+        this.props.getQuestionGroupsPageRequest({ page, pageSize, groupName });
+
+        // ❌ không nên forceUpdate trừ khi bất đắc dĩ
+        this.forceUpdate();
+    };
 
     handleDeleteRoleSubmit = (roleId) => {
         // Gọi redux action hoặc API delete role
@@ -303,24 +330,89 @@ class App extends Component {
         // Nếu không dùng redux, có thể gọi API trực tiếp
         // api.deleteRole(roleId).then(() => { ... })
     };
-    handleCheck_dataNull_goOtherPage = (usersToRender) => {
+    handleCheck_dataNull_goOtherPage = (data) => {
         const params = new URLSearchParams(window.location.search);
-        if (usersToRender.length === 0 && params.get("page") > 1) {
+        const url = window.location.href;
+        console.log("Checking data null for params:", params.toString());
+        if (data.length === 0 && params.get("page") > 1) {
             const page = params.get("page") - 1;
             params.set("page", page);
             window.history.pushState({}, "", `/users?${params.toString()}`);
             this.props.getUsersPageRequest({ page, pageSize: params.get("pageSize") || 10, name: params.get("name") || "", phone: params.get("phone") || "" });
+            // cập nhật lại param trên url
 
             // console.log("No users found, navigating to previous page");
         }
     };
+    handleDeleteGroupSubmit = (groupId) => {
+        this.props.deleteQuestionGroupRequest(groupId);
+        message.success("Xóa nhóm câu hỏi thành công!");
+    }
+    handlePageChangeGroup = (page, pageSize, groupName) => {
+        console.log("Page change requested:", page, pageSize, groupName);
+        this.props.getQuestionGroupsPageRequest({ page, pageSize, groupName });
+    }
+    handleSearchQuestionGroup = (searchTerm) => {
+        console.log("Tìm kiếm nhóm câu hỏi với:", searchTerm);
+
+        const params = new URLSearchParams(window.location.search);
+
+        // Cập nhật param URL
+        if (searchTerm.groupName) {
+            params.set("groupName", searchTerm.groupName);
+            console.log("Set groupName in URL params:", searchTerm.groupName);
+        } else {
+            params.delete("groupName");
+        }
+
+        // Luôn về trang đầu khi search
+        params.set("page", 1);
+
+        window.history.pushState({}, "", `${window.location.pathname}?${params.toString()}`);
+
+        // Gọi action lấy dữ liệu mới với param tìm kiếm
+        const page = parseInt(params.get("page"), 10) || 1;
+        const pageSize = parseInt(params.get("pageSize"), 10) || 10;
+        const groupName = params.get("groupName") || "";
+
+        console.log("Fetching question groups with:", { page, pageSize, groupName });
+
+        this.props.getQuestionGroupsPageRequest({ page, pageSize, groupName });
+    };
+
+    handleResetSearchQuestionGroup = () => {
+        const params = new URLSearchParams(window.location.search);
+        params.delete("groupName");
+
+        const page = parseInt(params.get("page"), 10) || 1;
+        const pageSize = parseInt(params.get("pageSize"), 10) || 10;
+
+        window.history.pushState({}, "", `${window.location.pathname}?page=${page}&pageSize=${pageSize}`);
+
+        // Gọi lại danh sách không filter
+        this.props.getQuestionGroupsPageRequest({ page, pageSize });
+    };
+
+    handleStartQuizClick = (id) => {
+        const params = new URLSearchParams(window.location.search);
+        console.log("Params before setting id:", id);
+        params.set("id", id);
+        window.history.pushState({}, "", `/list_question/answers?${params.toString()}`);
+        this.forceUpdate();
+    }
+    handleEditGroupClick = (id) => {
+        const params = new URLSearchParams(window.location.search);
+        console.log("Params before setting id:", id);
+        params.set("id", id);
+        window.history.pushState({}, "", `/list_question/edit_group?${params.toString()}`);
+        this.forceUpdate();
+    }
 
     renderContent = () => {
         if (this.state.loading) {
             return <Spin tip="Đang tải dữ liệu..." />;
         }
         const path = window.location.pathname;
-        const users = this.props.users;
         // DATA_LIST_USERS = users.items || [];
         // console.log(DATA_LIST_USERS);
 
@@ -352,9 +444,7 @@ class App extends Component {
                         <div className="custom-card">
 
 
-                            <div
-
-                            >
+                            <div>
                                 <SearchUserForm
                                     onSearch={this.handleSearch}
                                     onReset={this.handleResetSearch}
@@ -581,8 +671,147 @@ class App extends Component {
 
                     </>
                 );
+            case "/list_question":
+                const questionGroups = this.props.questionGroups.items || [];
+                this.handleCheck_dataNull_goOtherPage(questionGroups);
+                console.log("questionGroups in App.js:", questionGroups);
+
+                return (
+                    <>
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <span className="breadcrumb-link">Trang chủ</span>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <span className="breadcrumb-text">Câu hỏi</span>
+                            </Breadcrumb.Item>
+                        </Breadcrumb>
+
+                        <div className="custom-card">
+
+                            <div>
+                                <QuestionGroupSearchBar
+                                    onSearch={this.handleSearchQuestionGroup}
+                                    onReset={this.handleResetSearchQuestionGroup}
+                                    initialGroupName={new URLSearchParams(window.location.search).get("groupName") || ""}
+                                />
+                                <Button
+                                    type="primary"
+                                    icon={<PlusOutlined />}
+                                    className="btn-add"
+                                    onClick={() => {
+                                        // Lấy lại các param filter hiện tại
+                                        const params = new URLSearchParams(window.location.search);
+                                        // Xóa id nếu có (chỉ giữ filter)
+                                        params.delete("id");
+                                        const queryString = params.toString();
+                                        // window.history.pushState({}, "", `/list_question/edit_group?${params.toString()}`);
+                                        window.history.pushState({}, "", `/list_question/add_group?${params.toString()}`);
+                                        this.forceUpdate();
+                                    }}
+                                >
+                                    Thêm mới
+                                </Button>
+                                <div style={{ marginTop: '84px' }}></div>
+                                {!!this.props.users.error && (
+                                    <Alert
+                                        message={this.props.users.error}
+                                        type="error"
+                                        showIcon
+                                        closable
+                                        onClose={this.handleCloseAlert}
+                                        style={{ marginBottom: '16px' }}
+                                    />
+                                )}
+                                <QuestionGroupList
+                                    groups={questionGroups}
+                                    onDeleteGroupClick={this.handleDeleteGroupSubmit}
+                                    onEditGroupClick={this.handleEditGroupClick}
+                                    onStartQuizClick={this.handleStartQuizClick}
+                                    currentPage={this.props.questionGroups.page}
+                                    onPageChange={this.handlePageChangeGroup}
+                                    pageSize={this.props.questionGroups.pageSize}
+                                    total={this.props.questionGroups.total}
+                                    totalPages={this.props.questionGroups.totalPages}
+                                />
+
+                            </div>
+                        </div>
+
+                    </>
+                );
+            case "/list_question/answers":
+                return (
+                    <>
+
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <span className="breadcrumb-link">Trang chủ</span>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <span className="breadcrumb-link">Câu hỏi</span>
+                            </Breadcrumb.Item>
+
+                            <Breadcrumb.Item>
+                                <span className="breadcrumb-text">Trả lời câu hỏi</span>
+                            </Breadcrumb.Item>
+                        </Breadcrumb>
 
 
+
+
+                        <AddEditQuestionGroup go_page_question_group={this.go_page_question_group} />
+
+
+                    </>
+                );
+            case "/list_question/edit_group":
+                return (
+                    <>
+
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <span className="breadcrumb-link">Trang chủ</span>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <span className="breadcrumb-link">Câu hỏi</span>
+                            </Breadcrumb.Item>
+
+                            <Breadcrumb.Item>
+                                <span className="breadcrumb-text">Chỉnh sửa nhóm câu hỏi</span>
+                            </Breadcrumb.Item>
+                        </Breadcrumb>
+
+                        <AddEditQuestionGroup go_page_question_group={this.go_page_question_group} />
+
+
+
+                    </>
+                );
+            case "/list_question/add_group":
+                return (
+                    <>
+
+                        <Breadcrumb>
+                            <Breadcrumb.Item>
+                                <span className="breadcrumb-link">Trang chủ</span>
+                            </Breadcrumb.Item>
+                            <Breadcrumb.Item>
+                                <span className="breadcrumb-link">Câu hỏi</span>
+                            </Breadcrumb.Item>
+
+                            <Breadcrumb.Item>
+                                <span className="breadcrumb-text">Thêm nhóm câu hỏi</span>
+                            </Breadcrumb.Item>
+                        </Breadcrumb>
+
+
+
+
+                        <AddEditQuestionGroup go_page_question_group={this.go_page_question_group} />
+
+                    </>
+                );
 
             default:
                 return (
@@ -616,7 +845,7 @@ class App extends Component {
                 {/* <Layout style={{ minHeight: "100vh", background: "#f0f2f5" }}>  👈 xám nhạt */}
                 <Layout className="app-layout">
                     <Sidebar />
-            <Layout className="app-container">
+                    <Layout className="app-container">
                         <HeaderUserInfo />
                         <Content className="app-content">
 
@@ -625,7 +854,7 @@ class App extends Component {
                     </Layout>
                 </Layout>
                 {/* 👇 thêm cái overlay loading ở đây */}
-                <LoadingOverlay loading={this.props.users.loading || this.props.roles.loading} />
+                <LoadingOverlay loading={this.props.users.loading || this.props.roles.loading || this.props.questionGroups.loading} />
 
 
 
@@ -634,7 +863,7 @@ class App extends Component {
     }
 }
 
-export default connect(({ users, roles }) => ({ users, roles }), {
+export default connect(({ users, roles, questionGroups }) => ({ users, roles, questionGroups }), {
     getUsersRequest,
     getUsersPageRequest,
     createUserRequest,
@@ -647,7 +876,17 @@ export default connect(({ users, roles }) => ({ users, roles }), {
     deleteRoleRequest,
     getRolesSuccess,
     getRolesError,
-    getRolesPageRequest
+    getRolesPageRequest,
+
+    getQuestionGroupsPageRequest,
+    getQuestionGroupsPageSuccess,
+    // createQuestionGroupRequest,
+    // createQuestionGroupSuccess,
+    updateQuestionGroupRequest,
+    updateQuestionGroupSuccess,
+    deleteQuestionGroupRequest,
+    deleteQuestionGroupSuccess,
+    questionGroupsError
 
 })(App);
 

@@ -74,3 +74,49 @@
 .button-row {
   margin-top: 16px;
 }
+/* Phần nội dung câu hỏi */
+.question-text {
+  flex-grow: 1; /* Nội dung câu hỏi chiếm hết không gian còn lại */
+  margin-left: 5px; /* Cách số thứ tự 5px */
+  white-space: normal; /* Cho phép xuống dòng nếu nội dung dài */
+}
+/* Vùng chứa 3 nút */
+.question-actions {
+  margin-left: 440px;
+}
+/* ///////////// */
+.options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 10px;
+  padding: 10px 10px 23px;
+  box-sizing: border-box;
+  width: 1000px; /* Đáp án chiếm 1000px */
+}
+.checkbox-item {
+  display: flex;
+  align-items: center;
+}
+.checkbox-label {
+  margin-left: 8px;
+}
+.add-first-question-btn-container {
+  text-align: center;
+}
+.question-actions {
+  display: flex;
+  gap: 8px;
+}
+.ant-form-item-explain-error {
+  margin-top: 4px;
+  color: #ff4d4f;
+}
+.question-number {
+  flex-grow: 0; /* Không cho số thứ tự chiếm hết không gian */
+  padding-left: 5px; /* Cách lề trái 5px */
+  white-space: nowrap; /* Giữ số thứ tự trên một dòng */
+}
+
+
+
+
