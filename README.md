@@ -1,1 +1,1 @@
-Complete code example app for the Udemy Redux Saga course: https://www.udemy.com/redux-saga
+[![Watch the video](https://img.youtube.com/vi/ynxMu8rNJzY/0.jpg)](https://youtu.be/ynxMu8rNJzY)
