@@ -14,6 +14,8 @@ import SearchRoleForm from './role/SearchRoleForm';
 import QuestionGroupList from './question/QuestionGroupList';
 import QuestionGroupSearchBar from './question/SearchQuestion';
 import AddEditQuestionGroup from './question/Add_Edit_Question_Group';
+import FormAddQuestionList from './question/FormAddQuestionList';
+
 
 import { connect } from 'react-redux';
 import {
@@ -407,6 +409,11 @@ class App extends Component {
         window.history.pushState({}, "", `/list_question/edit_group?${params.toString()}`);
         this.forceUpdate();
     }
+    handleEditGroupClick = (id) => {
+        if (this.formAddRef.current) {
+            this.formAddRef.current.openForEdit(id); // 👈 gọi trực tiếp vào form
+        }
+    };
 
     renderContent = () => {
         if (this.state.loading) {
@@ -712,6 +719,15 @@ class App extends Component {
                                 >
                                     Thêm mới
                                 </Button>
+
+                                <FormAddQuestionList
+                                    ref={this.formAddRef}
+                                    icon={<PlusOutlined />}
+                                    onAdd={this.go_page_question_group}
+                                />
+
+
+
                                 <div style={{ marginTop: '84px' }}></div>
                                 {!!this.props.users.error && (
                                     <Alert
@@ -726,7 +742,7 @@ class App extends Component {
                                 <QuestionGroupList
                                     groups={questionGroups}
                                     onDeleteGroupClick={this.handleDeleteGroupSubmit}
-                                    onEditGroupClick={this.handleEditGroupClick}
+                                    onEditGroupClick={this.handleEditGroupClick_form}
                                     onStartQuizClick={this.handleStartQuizClick}
                                     currentPage={this.props.questionGroups.page}
                                     onPageChange={this.handlePageChangeGroup}

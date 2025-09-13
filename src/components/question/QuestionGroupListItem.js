@@ -53,7 +53,7 @@ const QuestionGroupListItem = ({
       render: (_, __, index) => index + 1, // index bắt đầu từ 0, nên +1
     },
     {
-      title: "Tên Nhóm",
+      title: "Chủ Đề",
       dataIndex: "name",
       key: "name",
       ellipsis: true,
@@ -95,7 +95,7 @@ const QuestionGroupListItem = ({
             icon={<DeleteOutlined />}
             onClick={() =>
               Modal.confirm({
-                title: "Bạn có muốn xóa nhóm câu hỏi này không?",
+                title: "Bạn có muốn xóa chủ đề câu hỏi này không?",
                 okText: "Yes",
                 okType: "danger",
                 cancelText: "No",
